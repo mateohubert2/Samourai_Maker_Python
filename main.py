@@ -28,4 +28,7 @@ class Main:
                     
             self.editeur.lancement(dt)
             pygame.display.update()
-print("")
+
+if __name__ == '__main__':
+    main = Main()
+    main.lancement()
