@@ -104,7 +104,7 @@ class Editeur:
             self.selection_hotkeys(event)
             self.menu_click(event)
             self.canvas_add()
-            
+            self.canvas_remove()
     def pan_input(self, event):
         
         #clique molette appuye / relache
@@ -149,6 +149,17 @@ class Editeur:
                 self.trouver_voisins(cellule_actuelle)
                 self.derniere_cellule_selectionne = cellule_actuelle
     
+    def canvas_remove(self):
+        if boutons_souris()[2] and not self.menu.rect.collidepoint(position_souris()):
+            if self.canvas_data:
+                current_cell = self.cellule_actuelle()
+                if current_cell in self.canvas_data:
+                    self.canvas_data[current_cell].remove_id(self.selection_index)
+
+                    if self.canvas_data[current_cell].is_empty:
+                        del self.canvas_data[current_cell]
+                    self.trouver_voisins(current_cell)
+                
     def draw_level(self):
         for cell_pos, tile in self.canvas_data.items():
             pos = self.origin + vector(cell_pos) * TAILLE_CASES
@@ -177,9 +188,10 @@ class Editeur:
 
             # enemies
             if tile.enemy:
-                test_surf = pygame.Surface((TAILLE_CASES, TAILLE_CASES))
-                test_surf.fill('red')
-                self.display_surface.blit(test_surf, pos)
+                frames = self.animations[tile.enemy]['frames']
+                index = int(self.animations[tile.enemy]['frame index'])
+                surf = frames[index]
+                self.display_surface.blit(surf, pos)
     #dessin
     def dessin_cases_lignes(self):
         colonnes = LARGEUR_FENETRE //TAILLE_CASES
@@ -232,6 +244,7 @@ class CanvasTile:
         self.objects = []
 
         self.add_id(tile_id)
+        self.is_empty = False
 
     def add_id(self, tile_id):
         options = {key: value['style'] for key, value in EDITOR_DATA.items()}
@@ -240,3 +253,16 @@ class CanvasTile:
             case 'eau': self.has_water = True
             case 'piece': self.coin = tile_id
             case 'ennemie': self.enemy = tile_id
+            
+    def remove_id(self, tile_id):
+        options = {key: value['style'] for key, value in EDITOR_DATA.items()}
+        match options[tile_id]:
+            case 'terrain': self.has_terrain = False
+            case 'eau': self.has_water = False
+            case 'piece': self.coin = None
+            case 'ennemie': self.enemy = None
+        self.verifier_contenue()
+    
+    def verifier_contenue(self):
+        if not self.has_terrain and not self.has_water and not self.coin and not self.enemy:
+            self.is_empty = True

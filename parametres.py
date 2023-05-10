@@ -15,8 +15,8 @@ EDITOR_DATA = {
     5: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/silver.png', 'preview': 'Graphique/Preview/silver.png', 'graphics': 'Graphique/Piece/Animation_Piece_Silver'},
     6: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/diamond.png', 'preview': 'Graphique/Preview/diamond.png', 'graphics': 'Graphique/Piece/Animation_Piece_Diamond'},
     
-    7: {'style': 'ennemie', 'type': 'tile', 'menu': 'ennemie', 'menu_surf': 'Graphique/Ennemie/ennemie.png', 'preview': 'Graphique/Preview/ennemie.png', 'graphics': None},
-    8: {'style': 'ennemie', 'type': 'tile', 'menu': 'ennemie', 'menu_surf': 'Graphique/Ennemie/ennemie2.png', 'preview': 'Graphique/Preview/ennemie2.png', 'graphics': None},
+    7: {'style': 'ennemie', 'type': 'tile', 'menu': 'ennemie', 'menu_surf': 'Graphique/Ennemie/ennemie.png', 'preview': 'Graphique/Preview/ennemie.png', 'graphics': 'Graphique/Ennemie/Animation_Ennemie_1'},
+    8: {'style': 'ennemie', 'type': 'tile', 'menu': 'ennemie', 'menu_surf': 'Graphique/Ennemie/ennemie2.png', 'preview': 'Graphique/Preview/ennemie2.png', 'graphics': 'Graphique/Ennemie/Animation_Ennemie_2'},
         
     9: {'style': 'arbre', 'type': 'tile', 'menu': 'arbre fg', 'menu_surf': 'Graphique/Arbre/arbre1.png', 'preview': 'Graphique/Preview/arbre1.png', 'graphics': None},
     10: {'style': 'arbre', 'type': 'tile', 'menu': 'arbre fg', 'menu_surf': 'Graphique/Arbre/arbre2.png', 'preview': 'Graphique/Preview/arbre2.png', 'graphics': None},
