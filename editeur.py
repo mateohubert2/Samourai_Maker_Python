@@ -170,9 +170,10 @@ class Editeur:
 
             # coins
             if tile.coin:
-                test_surf = pygame.Surface((TAILLE_CASES, TAILLE_CASES))
-                test_surf.fill('yellow')
-                self.display_surface.blit(test_surf, pos)
+                frames = self.animations[tile.coin]['frames']
+                index = int(self.animations[tile.coin]['frame index'])
+                surf = frames[index]
+                self.display_surface.blit(surf, pos)
 
             # enemies
             if tile.enemy:

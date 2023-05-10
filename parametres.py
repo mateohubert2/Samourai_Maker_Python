@@ -11,9 +11,9 @@ EDITOR_DATA = {
     2: {'style': 'terrain', 'type': 'tile', 'menu': 'terrain', 'menu_surf': 'Graphique/Terrain/terrain.png', 'preview': 'Graphique/Preview/terrain.png', 'graphics': None},
     3: {'style': 'eau', 'type': 'tile', 'menu': 'terrain', 'menu_surf': 'Graphique/Eau/eau.png', 'preview': 'Graphique/Preview/eau.png', 'graphics': 'Graphique/Eau/Animations'},
     
-    4: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/gold.png', 'preview': 'Graphique/Preview/gold.png', 'graphics': None},
-    5: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/silver.png', 'preview': 'Graphique/Preview/silver.png', 'graphics': None},
-    6: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/diamond.png', 'preview': 'Graphique/Preview/diamond.png', 'graphics': None},
+    4: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/gold.png', 'preview': 'Graphique/Preview/gold.png', 'graphics': 'Graphique/Piece/Animation_Piece_Gold'},
+    5: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/silver.png', 'preview': 'Graphique/Preview/silver.png', 'graphics': 'Graphique/Piece/Animation_Piece_Silver'},
+    6: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/diamond.png', 'preview': 'Graphique/Preview/diamond.png', 'graphics': 'Graphique/Piece/Animation_Piece_Diamond'},
     
     7: {'style': 'ennemie', 'type': 'tile', 'menu': 'ennemie', 'menu_surf': 'Graphique/Ennemie/ennemie.png', 'preview': 'Graphique/Preview/ennemie.png', 'graphics': None},
     8: {'style': 'ennemie', 'type': 'tile', 'menu': 'ennemie', 'menu_surf': 'Graphique/Ennemie/ennemie2.png', 'preview': 'Graphique/Preview/ennemie2.png', 'graphics': None},
