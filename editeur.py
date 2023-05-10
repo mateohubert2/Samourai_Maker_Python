@@ -3,6 +3,7 @@ from pygame.math import Vector2 as vector
 from parametres import*
 from pygame.mouse import get_pressed as boutons_souris
 from pygame.mouse import get_pos as position_souris
+from pygame.image import load
 from menu import Menu
 import sys
 class Editeur:
@@ -12,7 +13,7 @@ class Editeur:
         self.canvas_data = {}
         
         self.cases_terrain = cases_terrain
-        
+        self.imports()
         #navigation
         self.origin = vector()
         self.pan_active = False
@@ -57,12 +58,23 @@ class Editeur:
         for cell in cluster_local:
                 if cell in self.canvas_data:
                     self.canvas_data[cell].terrain_voisins = []
+                    self.canvas_data[cell].water_on_top = False
                     for name, side in DIRECTION_VOISINS.items():
                         cellule_voisine = (cell[0] + side[0],cell[1] + side[1])
-
+                        
                         if cellule_voisine in self.canvas_data:
-                            if self.canvas_data[cellule_voisine].has_terrain:
-                                self.canvas_data[cell].terrain_voisins.append(name)
+                            
+                            #eau voisins
+                            if self.canvas_data[cellule_voisine].has_water and self.canvas_data[cell].has_water and name == 'A':
+                                self.canvas_data[cell].water_on_top = True
+                        
+                            #terrain voisins
+                            if cellule_voisine in self.canvas_data:
+                                if self.canvas_data[cellule_voisine].has_terrain:
+                                    self.canvas_data[cell].terrain_voisins.append(name)
+    
+    def imports(self):
+        self.bas_eau = load("Graphique/Eau/eau.png")
     
     def boucle_evenement(self):
         #ferme le jeu
@@ -119,35 +131,18 @@ class Editeur:
                 self.trouver_voisins(cellule_actuelle)
                 self.derniere_cellule_selectionne = cellule_actuelle
     
-    def draw_tile_lines(self):
-        cols = LARGEUR_FENETRE // TAILLE_CASES
-        ligs = HAUTEUR_FENETRE// TAILLE_CASES
-
-        origin_offset = vector(
-            x = self.origin.x - int(self.origin.x / TAILLE_CASES) * TAILLE_CASES,
-            y = self.origin.y - int(self.origin.y / TAILLE_CASES) * TAILLE_CASES)
-
-        self.support_line_surf.fill('green')
-
-        for col in range(cols + 1):
-            x = origin_offset.x + col * TAILLE_CASES
-            pygame.draw.line(self.support_line_surf,COULEUR_LIGNE, (x,0), (x,HAUTEUR_FENETRE))
-
-        for row in range(ligs + 1):
-            y = origin_offset.y + row * TAILLE_CASES
-            pygame.draw.line(self.support_line_surf,COULEUR_LIGNE, (0,y), (LARGEUR_FENETRE,y))
-
-        self.display_surface.blit(self.support_line_surf,(0,0))
-    
     def draw_level(self):
         for cell_pos, tile in self.canvas_data.items():
             pos = self.origin + vector(cell_pos) * TAILLE_CASES
 
             # water
             if tile.has_water:
-                test_surf = pygame.Surface((TAILLE_CASES, TAILLE_CASES))
-                test_surf.fill('blue')
-                self.display_surface.blit(test_surf, pos)
+                if tile.water_on_top:
+                    self.display_surface.blit(self.bas_eau, pos)
+                else:
+                    test_surf = pygame.Surface((TAILLE_CASES, TAILLE_CASES))
+                    test_surf.fill('red')
+                    self.display_surface.blit(test_surf, pos)
 
             if tile.has_terrain:
                 terrain_string = ''.join(tile.terrain_voisins)
@@ -165,7 +160,6 @@ class Editeur:
                 test_surf = pygame.Surface((TAILLE_CASES, TAILLE_CASES))
                 test_surf.fill('red')
                 self.display_surface.blit(test_surf, pos)
-    
     #dessin
     def dessin_cases_lignes(self):
         colonnes = LARGEUR_FENETRE //TAILLE_CASES
@@ -189,37 +183,37 @@ class Editeur:
         self.boucle_evenement()
         
         self.display_surface.fill('gray')
-        self.draw_level()
         self.dessin_cases_lignes()
+        self.draw_level()
         pygame.draw.circle(self.display_surface, 'red', self.origin, 10)
         self.menu.afficher(self.selection_index)
         
 class CanvasTile:
-	def __init__(self, tile_id):
+    def __init__(self, tile_id):
 
-		# terrain
-		self.has_terrain = False
-		self.terrain_neighbors = []
+        # terrain
+        self.has_terrain = False
+        self.terrain_neighbors = []
 
-		# water
-		self.has_water = False
-		self.water_on_top = False
+        # water
+        self.has_water = False
+        self.water_on_top = False
 
-		# coin
-		self.coin = None
+        # coin
+        self.coin = None
 
-		# enemy
-		self.enemy = None
+        # enemy
+        self.enemy = None
 
-		# objects
-		self.objects = []
+        # objects
+        self.objects = []
 
-		self.add_id(tile_id)
+        self.add_id(tile_id)
 
-	def add_id(self, tile_id):
-		options = {key: value['style'] for key, value in EDITOR_DATA.items()}
-		match options[tile_id]:
-			case 'terrain': self.has_terrain = True
-			case 'eau': self.has_water = True
-			case 'piece': self.coin = tile_id
-			case 'annemie': self.enemy = tile_id
+    def add_id(self, tile_id):
+        options = {key: value['style'] for key, value in EDITOR_DATA.items()}
+        match options[tile_id]:
+            case 'terrain': self.has_terrain = True
+            case 'eau': self.has_water = True
+            case 'piece': self.coin = tile_id
+            case 'ennemie': self.enemy = tile_id
