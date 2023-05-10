@@ -5,6 +5,7 @@ from pygame.mouse import get_pressed as boutons_souris
 from pygame.mouse import get_pos as position_souris
 from pygame.image import load
 from menu import Menu
+from support import*
 import sys
 class Editeur:
     def __init__(self, cases_terrain):
@@ -76,6 +77,23 @@ class Editeur:
     def imports(self):
         self.bas_eau = load("Graphique/Eau/eau.png")
     
+        #animations
+        self.animations = {}
+        for key, value in EDITOR_DATA.items():
+            if value['graphics']:
+                graphics = import_folder(value['graphics'])
+                self.animations[key] = {
+                    'frame index': 0,
+                    'frames': graphics,
+                    'length': len(graphics)
+                }
+        
+    def animation_uptade(self, dt):
+        for value in self.animations.values():
+            value['frame index'] += (VITESSE_ANIMATION * dt) / 1.5
+            if value['frame index'] >= value['length']:
+                value['frame index'] = 0
+        
     def boucle_evenement(self):
         #ferme le jeu
         for event in pygame.event.get():
@@ -140,9 +158,10 @@ class Editeur:
                 if tile.water_on_top:
                     self.display_surface.blit(self.bas_eau, pos)
                 else:
-                    test_surf = pygame.Surface((TAILLE_CASES, TAILLE_CASES))
-                    test_surf.fill('red')
-                    self.display_surface.blit(test_surf, pos)
+                    frames = self.animations[3]['frames']
+                    index = int(self.animations[3]['frame index'])
+                    surf = frames[index]
+                    self.display_surface.blit(surf, pos)
 
             if tile.has_terrain:
                 terrain_string = ''.join(tile.terrain_voisins)
@@ -181,7 +200,10 @@ class Editeur:
         
     def lancement(self, dt):
         self.boucle_evenement()
+        #mise a jour
+        self.animation_uptade(dt)
         
+        #dessin
         self.display_surface.fill('gray')
         self.dessin_cases_lignes()
         self.draw_level()

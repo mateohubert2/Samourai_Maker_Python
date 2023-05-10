@@ -9,7 +9,7 @@ EDITOR_DATA = {
     1: {'style': 'ciel', 'type': 'object', 'menu': None, 'menu_surf': None, 'preview': None, 'graphics': None},
     
     2: {'style': 'terrain', 'type': 'tile', 'menu': 'terrain', 'menu_surf': 'Graphique/Terrain/terrain.png', 'preview': 'Graphique/Preview/terrain.png', 'graphics': None},
-    3: {'style': 'eau', 'type': 'tile', 'menu': 'terrain', 'menu_surf': 'Graphique/Eau/eau.png', 'preview': 'Graphique/Preview/eau.png', 'graphics': None},
+    3: {'style': 'eau', 'type': 'tile', 'menu': 'terrain', 'menu_surf': 'Graphique/Eau/eau.png', 'preview': 'Graphique/Preview/eau.png', 'graphics': 'Graphique/Eau/Animations'},
     
     4: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/gold.png', 'preview': 'Graphique/Preview/gold.png', 'graphics': None},
     5: {'style': 'piece', 'type': 'tile', 'menu': 'piece', 'menu_surf': 'Graphique/Piece/silver.png', 'preview': 'Graphique/Preview/silver.png', 'graphics': None},
