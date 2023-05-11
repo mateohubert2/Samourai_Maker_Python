@@ -6,6 +6,7 @@ VITESSE_ANIMATION = 8
 COULEUR_LIGNE = 'black'
 
 EDITOR_DATA = {
+    0: {'style': 'personnage', 'type': 'object', 'menu': None, 'menu_surf': None, 'preview': None, 'graphics': 'Graphique/Personnage/Animation_Personnage'},    
     1: {'style': 'ciel', 'type': 'object', 'menu': None, 'menu_surf': None, 'preview': None, 'graphics': None},
     
     2: {'style': 'terrain', 'type': 'tile', 'menu': 'terrain', 'menu_surf': 'Graphique/Terrain/terrain.png', 'preview': 'Graphique/Preview/terrain.png', 'graphics': None},
@@ -18,13 +19,13 @@ EDITOR_DATA = {
     7: {'style': 'ennemie', 'type': 'tile', 'menu': 'ennemie', 'menu_surf': 'Graphique/Ennemie/ennemie.png', 'preview': 'Graphique/Preview/ennemie.png', 'graphics': 'Graphique/Ennemie/Animation_Ennemie_1'},
     8: {'style': 'ennemie', 'type': 'tile', 'menu': 'ennemie', 'menu_surf': 'Graphique/Ennemie/ennemie2.png', 'preview': 'Graphique/Preview/ennemie2.png', 'graphics': 'Graphique/Ennemie/Animation_Ennemie_2'},
         
-    9: {'style': 'arbre', 'type': 'tile', 'menu': 'arbre fg', 'menu_surf': 'Graphique/Arbre/arbre1.png', 'preview': 'Graphique/Preview/arbre1.png', 'graphics': None},
-    10: {'style': 'arbre', 'type': 'tile', 'menu': 'arbre fg', 'menu_surf': 'Graphique/Arbre/arbre2.png', 'preview': 'Graphique/Preview/arbre2.png', 'graphics': None},
-    11: {'style': 'arbre', 'type': 'tile', 'menu': 'arbre fg', 'menu_surf': 'Graphique/Arbre/arbre3.png', 'preview': 'Graphique/Preview/arbre3.png', 'graphics': None},
+    9: {'style': 'arbre', 'type': 'object', 'menu': 'arbre fg', 'menu_surf': 'Graphique/Arbre/arbre1.png', 'preview': 'Graphique/Preview/arbre1.png', 'graphics': 'Graphique/Arbre/Animation_Arbre1fg'},
+    10: {'style': 'arbre', 'type': 'object', 'menu': 'arbre fg', 'menu_surf': 'Graphique/Arbre/arbre2.png', 'preview': 'Graphique/Preview/arbre2.png', 'graphics': 'Graphique/Arbre/Animation_Arbre2fg'},
+    11: {'style': 'arbre', 'type': 'object', 'menu': 'arbre fg', 'menu_surf': 'Graphique/Arbre/arbre3.png', 'preview': 'Graphique/Preview/arbre3.png', 'graphics': 'Graphique/Arbre/Animation_Arbre3fg'},
     
-    12: {'style': 'arbre', 'type': 'tile', 'menu': 'arbre bg', 'menu_surf': 'Graphique/Arbre/arbre1bg.png', 'preview': 'Graphique/Preview/arbre1bg.png', 'graphics': None},
-    13: {'style': 'arbre', 'type': 'tile', 'menu': 'arbre bg', 'menu_surf': 'Graphique/Arbre/arbre2bg.png', 'preview': 'Graphique/Preview/arbre2bg.png', 'graphics': None},
-    14: {'style': 'arbre', 'type': 'tile', 'menu': 'arbre bg', 'menu_surf': 'Graphique/Arbre/arbre3bg.png', 'preview': 'Graphique/Preview/arbre3bg.png', 'graphics': None}
+    12: {'style': 'arbre', 'type': 'object', 'menu': 'arbre bg', 'menu_surf': 'Graphique/Arbre/arbre1bg.png', 'preview': 'Graphique/Preview/arbre1bg.png', 'graphics': 'Graphique/Arbre/Animation_Arbre1bg'},
+    13: {'style': 'arbre', 'type': 'object', 'menu': 'arbre bg', 'menu_surf': 'Graphique/Arbre/arbre2bg.png', 'preview': 'Graphique/Preview/arbre2bg.png', 'graphics': 'Graphique/Arbre/Animation_Arbre1bg'},
+    14: {'style': 'arbre', 'type': 'object', 'menu': 'arbre bg', 'menu_surf': 'Graphique/Arbre/arbre3bg.png', 'preview': 'Graphique/Preview/arbre3bg.png', 'graphics': 'Graphique/Arbre/Animation_Arbre1bg'}
 }
 
 # colors

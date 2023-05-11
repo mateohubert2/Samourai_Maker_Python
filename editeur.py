@@ -31,6 +31,26 @@ class Editeur:
         #menu
         self.menu = Menu()
         
+        #objets
+        self.canvas_objets = pygame.sprite.Group()
+        self.objet_drag_active = False
+        #personnage
+        CanvasObject(
+            pos = (200, HAUTEUR_FENETRE / 2),
+            frames = self.animations[0]['frames'],
+            tile_id = 0,
+            origin = self.origin,
+            group = self.canvas_objets)
+        
+        #sky
+        self.sky_handle = CanvasObject(
+            pos = (LARGEUR_FENETRE / 2, HAUTEUR_FENETRE / 2),
+            frames = [self.sky_handle_surf],
+            tile_id = 1,
+            origin = self.origin,
+            group = self.canvas_objets
+            )
+        
     def cellule_actuelle(self):
         distance_de_origine = vector(position_souris()) - self.origin
 
@@ -75,8 +95,8 @@ class Editeur:
                                     self.canvas_data[cell].terrain_voisins.append(name)
     
     def imports(self):
-        self.bas_eau = load("Graphique/Eau/eau.png")
-    
+        self.bas_eau = load('Graphique/Eau/eau.png').convert_alpha()
+        self.sky_handle_surf = load('Graphique/curseur/handle.png').convert_alpha()
         #animations
         self.animations = {}
         for key, value in EDITOR_DATA.items():
@@ -103,8 +123,11 @@ class Editeur:
             self.pan_input(event)
             self.selection_hotkeys(event)
             self.menu_click(event)
+            self.objet_drag(event)
             self.canvas_add()
             self.canvas_remove()
+
+            
     def pan_input(self, event):
         
         #clique molette appuye / relache
@@ -122,6 +145,9 @@ class Editeur:
         #panning mise a jour
         if self.pan_active:
             self.origin = vector(position_souris()) - self.pan_offset
+            
+            for sprite in self.canvas_objets:
+                sprite.pan_pos(self.origin)
     
     def selection_hotkeys(self, event):
         if event.type == pygame.KEYDOWN:
@@ -136,18 +162,26 @@ class Editeur:
           self.selection_index = self.menu.click(position_souris(), boutons_souris())  
     
     def canvas_add(self):
-        if boutons_souris()[0] and not self.menu.rect.collidepoint(position_souris()):
+        if boutons_souris()[0] and not self.menu.rect.collidepoint(position_souris()) and not self.objet_drag_active:
             cellule_actuelle = self.cellule_actuelle()
+            if EDITOR_DATA[self.selection_index]['type'] == 'tile':
+                
+                if cellule_actuelle != self.derniere_cellule_selectionne:
 
-            if cellule_actuelle != self.derniere_cellule_selectionne:
-
-                if cellule_actuelle in self.canvas_data:
-                    self.canvas_data[cellule_actuelle].add_id(self.selection_index)
-                else:
-                    self.canvas_data[cellule_actuelle] = CanvasTile(self.selection_index)
-        
-                self.trouver_voisins(cellule_actuelle)
-                self.derniere_cellule_selectionne = cellule_actuelle
+                    if cellule_actuelle in self.canvas_data:
+                        self.canvas_data[cellule_actuelle].add_id(self.selection_index)
+                    else:
+                        self.canvas_data[cellule_actuelle] = CanvasTile(self.selection_index)
+            
+                    self.trouver_voisins(cellule_actuelle)
+                    self.derniere_cellule_selectionne = cellule_actuelle
+            else:
+                CanvasObject(
+                    pos = position_souris(),
+                    frames = self.animations[self.selection_index]['frames'],
+                    tile_id = self.selection_index,
+                    origin = self.origin,
+                    group = self.canvas_objets)
     
     def canvas_remove(self):
         if boutons_souris()[2] and not self.menu.rect.collidepoint(position_souris()):
@@ -159,7 +193,18 @@ class Editeur:
                     if self.canvas_data[current_cell].is_empty:
                         del self.canvas_data[current_cell]
                     self.trouver_voisins(current_cell)
-                
+    
+    def objet_drag(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and boutons_souris()[0]:
+            for sprite in self.canvas_objets:
+                if sprite.rect.collidepoint(event.pos):
+                    sprite.start_drag()
+                    self.objet_drag_active = True
+        if event.type == pygame.MOUSEBUTTONUP and self.objet_drag_active:
+            for sprite in self.canvas_objets:
+                if sprite.selected:
+                    sprite.drag_end(self.origin)
+                    self.objet_drag_active = False
     def draw_level(self):
         for cell_pos, tile in self.canvas_data.items():
             pos = self.origin + vector(cell_pos) * TAILLE_CASES
@@ -192,6 +237,7 @@ class Editeur:
                 index = int(self.animations[tile.enemy]['frame index'])
                 surf = frames[index]
                 self.display_surface.blit(surf, pos)
+        self.canvas_objets.draw(self.display_surface)
     #dessin
     def dessin_cases_lignes(self):
         colonnes = LARGEUR_FENETRE //TAILLE_CASES
@@ -215,7 +261,7 @@ class Editeur:
         self.boucle_evenement()
         #mise a jour
         self.animation_uptade(dt)
-        
+        self.canvas_objets.update(dt)
         #dessin
         self.display_surface.fill('gray')
         self.dessin_cases_lignes()
@@ -266,3 +312,43 @@ class CanvasTile:
     def verifier_contenue(self):
         if not self.has_terrain and not self.has_water and not self.coin and not self.enemy:
             self.is_empty = True
+            
+class CanvasObject(pygame.sprite.Sprite):
+    def __init__(self, pos, frames, tile_id, origin, group):
+        super().__init__(group)
+        self.tile_id = tile_id
+        
+        #animation
+        self.frames = frames
+        self.frame_index = 0
+        
+        self.image = self.frames[self.frame_index]
+        self.rect = self.image.get_rect(center = pos)
+        #mouvement
+        self.distance_to_origin = vector(self.rect.topleft) - origin
+        self.selected = False
+        self.mouse_offset = vector()
+        
+    def start_drag(self):
+        self.selected = True
+        self.mouse_offset = vector(position_souris()) - vector(self.rect.topleft)
+        
+    def drag(self):
+        if self.selected:
+            self.rect.topleft = position_souris() - self.mouse_offset
+    
+    def drag_end(self, origin):
+        self.selected = False
+        self.distance_to_origin = vector(self.rect.topleft) - origin
+    def animate(self, dt):
+        self.frame_index += (VITESSE_ANIMATION * dt) / 1.5
+        self.frame_index = 0 if self.frame_index >= len(self.frames) else self.frame_index
+        self.image = self.frames[int(self.frame_index)]
+        self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+    
+    def pan_pos(self, origin):
+        self.rect.topleft = origin + self.distance_to_origin
+    
+    def update(self, dt):
+        self.animate(dt)
+        self.drag()
