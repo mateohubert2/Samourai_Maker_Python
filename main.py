@@ -24,6 +24,7 @@ class Main:
     
     def lancement(self):
         while True:
+            pygame.display.set_caption('Samourai Maker par Matéo et Evan')
             dt = self.clock.tick() / 1000
                     
             self.editeur.lancement(dt)
