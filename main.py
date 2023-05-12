@@ -15,6 +15,13 @@ class Main:
         self.editeur_active = True
         self.transition = Transition(self.toggle)
         self.editeur = Editeur(self.cases_terrain, self.switch)
+        
+        self.gold = import_folder('Graphique/Piece/Animation_Piece_Gold')
+        self.silver = import_folder('Graphique/Piece/Animation_Piece_Silver')
+        self.diamond = import_folder('Graphique/Piece/Animation_Piece_Diamond')
+        self.particule = import_folder('Graphique/Piece/Particule')
+        
+        
         #cureur
         surf = load('Graphique/curseur/souris.png').convert_alpha()
         curseur = pygame.cursors.Cursor((0,0), surf)
@@ -22,7 +29,8 @@ class Main:
         
     def imports(self):
         self.cases_terrain = import_folder_dict('Graphique/Terrain/Land')  
-    
+        self.bas_eau = load('Graphique/Eau/eau.png').convert_alpha()
+        self.water_top_animation = import_folder('Graphique/Eau/Animations')
     def toggle(self):
         self.editeur_active = not self.editeur_active
     
@@ -30,7 +38,13 @@ class Main:
         self.transition.active = True
         if grid:
             self.level = Level(grid, self.switch,{
-                'land': self.cases_terrain
+                'land': self.cases_terrain,
+                'water bottom': self.bas_eau,
+                'water top': self.water_top_animation,
+                'gold': self.gold,
+                'silver': self.silver,
+                'diamond': self.diamond,
+                'particle': self.particule
             })
     
     def lancement(self):

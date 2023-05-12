@@ -4,7 +4,7 @@ from pygame.math import Vector2 as vector
 from parametres import*
 from support import*
 
-from sprites import Generic, Player
+from sprites import Generic, Animated, Particule, Coin, Player
 
 class Level:
     def __init__(self, grid, switch, asset_dict):
@@ -13,19 +13,36 @@ class Level:
         
         #groups
         self.all_sprites = pygame.sprite.Group()
+        self.coin_sprites = pygame.sprite.Group()
         
         self.build_level(grid, asset_dict)
+        
+        #chose additionnel
+        self.particule_surfs = asset_dict['particle']
     
     def build_level(self, grid, asset_dict):
           for layer_name, couche in grid.items():
               for pos, data in couche.items():
                     if layer_name == 'terrain':
                         Generic(pos, asset_dict['land'][data], self.all_sprites)
+                    if layer_name == 'eau':
+                        if data == 'top':
+                            Animated(asset_dict['water top'], pos, self.all_sprites)
+                        else:
+                            Generic(pos, asset_dict['water bottom'], self.all_sprites)
                     
                     match data:
                         case 0: self.player = Player(pos, self.all_sprites)
-                  
-                  
+                        case 4: Coin('gold', asset_dict['gold'], pos, [self.all_sprites, self.coin_sprites])
+                        case 5: Coin('silver', asset_dict['silver'], pos, [self.all_sprites, self.coin_sprites])
+                        case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites])
+         
+    def get_coins(self) :
+        collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)      
+        for sprite in collided_coins:
+            Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
+        
+        
     def boucle_evenement(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -36,6 +53,8 @@ class Level:
                 
     def lancement(self, dt):
         self.boucle_evenement()
-        self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.update(dt)
+        self.get_coins()
+        
+        self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.draw(self.display_surface)
