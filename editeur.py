@@ -10,10 +10,11 @@ from support import*
 from random import choice, randint
 import sys
 class Editeur:
-    def __init__(self, cases_terrain):
+    def __init__(self, cases_terrain, switch):
         #description du main
         self.display_surface = pygame.display.get_surface()
         self.canvas_data = {}
+        self.switch = switch
         
         #importation
         self.cases_terrain = cases_terrain
@@ -195,7 +196,7 @@ class Editeur:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                print(self.create_grid())
+                self.switch(self.create_grid())
                 
             self.pan_input(event)
             self.selection_hotkeys(event)
