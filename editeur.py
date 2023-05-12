@@ -5,6 +5,7 @@ from pygame.mouse import get_pressed as boutons_souris
 from pygame.mouse import get_pos as position_souris
 from pygame.image import load
 from menu import Menu
+from timer import Timer
 from support import*
 import sys
 class Editeur:
@@ -34,6 +35,8 @@ class Editeur:
         #objets
         self.canvas_objets = pygame.sprite.Group()
         self.objet_drag_active = False
+        self.object_timer = Timer(400)
+        
         #personnage
         CanvasObject(
             pos = (200, HAUTEUR_FENETRE / 2),
@@ -176,12 +179,14 @@ class Editeur:
                     self.trouver_voisins(cellule_actuelle)
                     self.derniere_cellule_selectionne = cellule_actuelle
             else:
-                CanvasObject(
-                    pos = position_souris(),
-                    frames = self.animations[self.selection_index]['frames'],
-                    tile_id = self.selection_index,
-                    origin = self.origin,
-                    group = self.canvas_objets)
+                if not self.object_timer.active:
+                    CanvasObject(
+                        pos = position_souris(),
+                        frames = self.animations[self.selection_index]['frames'],
+                        tile_id = self.selection_index,
+                        origin = self.origin,
+                        group = self.canvas_objets)
+                    self.object_timer.activate()
     
     def canvas_remove(self):
         if boutons_souris()[2] and not self.menu.rect.collidepoint(position_souris()):
@@ -262,6 +267,7 @@ class Editeur:
         #mise a jour
         self.animation_uptade(dt)
         self.canvas_objets.update(dt)
+        self.object_timer.uptade()
         #dessin
         self.display_surface.fill('gray')
         self.dessin_cases_lignes()
