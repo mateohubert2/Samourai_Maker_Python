@@ -29,7 +29,9 @@ class Main:
     def switch(self, grid = None):
         self.transition.active = True
         if grid:
-            self.level = Level(grid, self.switch)
+            self.level = Level(grid, self.switch,{
+                'land': self.cases_terrain
+            })
     
     def lancement(self):
         while True:
