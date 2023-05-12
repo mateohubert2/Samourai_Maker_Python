@@ -44,6 +44,8 @@ class Editeur:
         
         #objets
         self.canvas_objets = pygame.sprite.Group()
+        self.foreground = pygame.sprite.Group()
+        self.background = pygame.sprite.Group()
         self.objet_drag_active = False
         self.object_timer = Timer(400)
         
@@ -53,7 +55,7 @@ class Editeur:
             frames = self.animations[0]['frames'],
             tile_id = 0,
             origin = self.origin,
-            group = self.canvas_objets)
+            group = [self.canvas_objets, self.foreground])
         
         #sky
         self.sky_handle = CanvasObject(
@@ -61,11 +63,11 @@ class Editeur:
             frames = [self.sky_handle_surf],
             tile_id = 1,
             origin = self.origin,
-            group = self.canvas_objets
+            group = [self.canvas_objets, self.background]
             )
         
-    def cellule_actuelle(self):
-        distance_de_origine = vector(position_souris()) - self.origin
+    def cellule_actuelle(self, obj = None):
+        distance_de_origine = vector(position_souris()) - self.origin if not obj else vector(obj.distance_to_origin) - self.origin
 
         if distance_de_origine.x > 0:
             col = int(distance_de_origine.x / TAILLE_CASES)
@@ -91,7 +93,7 @@ class Editeur:
             # check neighbors
         for cell in cluster_local:
                 if cell in self.canvas_data:
-                    self.canvas_data[cell].terrain_voisins = []
+                    self.canvas_data[cell].cases_terrain = []
                     self.canvas_data[cell].water_on_top = False
                     for name, side in DIRECTION_VOISINS.items():
                         cellule_voisine = (cell[0] + side[0],cell[1] + side[1])
@@ -105,7 +107,7 @@ class Editeur:
                             #terrain voisins
                             if cellule_voisine in self.canvas_data:
                                 if self.canvas_data[cellule_voisine].has_terrain:
-                                    self.canvas_data[cell].terrain_voisins.append(name)
+                                    self.canvas_data[cell].cases_terrain.append(name)
     
     def imports(self):
         self.bas_eau = load('Graphique/Eau/eau.png').convert_alpha()
@@ -129,12 +131,72 @@ class Editeur:
             if value['frame index'] >= value['length']:
                 value['frame index'] = 0
         
+    def create_grid(self):
+        #ajouter les objets au cases
+        
+        for tile in self.canvas_data.values():
+            tile.objects = []
+            
+        for obj in self.canvas_objets:
+            cellule_actuelle = self.cellule_actuelle(obj)
+            offset = vector(obj.distance_to_origin) - (vector(cellule_actuelle) * TAILLE_CASES)
+            
+            if cellule_actuelle in self.canvas_data: #la case existe deja
+                self.canvas_data[cellule_actuelle].add_id(obj.tile_id, offset)
+            else: #la case n'existe pas encore
+                self.canvas_data[cellule_actuelle] = CanvasTile(obj.tile_id, offset)
+                
+        #grid offset
+        gauche = sorted(self.canvas_data.keys(), key = lambda tile: tile[0])[0][0]
+        haut = sorted(self.canvas_data.keys(), key = lambda tile: tile[1])[0][1]
+
+        #grille vide
+        couche = {
+            'eau': {},
+            'arbre bg': {},
+            'terrain': {},
+            'ennemie': {},
+            'piece': {},
+            'objets fg': {},
+        }
+        
+        #remplir la grille
+        for tile_pos, tile in self.canvas_data.items():
+            lig_ajuste = tile_pos[1] - haut
+            col_ajuste = tile_pos[0] - gauche
+            
+            x = col_ajuste * TAILLE_CASES
+            y = lig_ajuste * TAILLE_CASES
+            
+            if tile.has_water:
+                couche['eau'][(x,y)] = tile.get_water()
+                
+            if tile.has_terrain:
+                couche['terrain'][(x,y)] = tile.get_terrain() if tile.get_terrain() in self.cases_terrain else 'X'
+            
+            if tile.coin:
+                couche['piece'][(x + TAILLE_CASES // 2,y + TAILLE_CASES // 2)] = tile.coin
+            
+            if tile.enemy:
+                couche['ennemie'][(x,y)] = tile.enemy
+                
+            if tile.objects:
+                for obj, offset in tile.objects:
+                    if obj in [key for key, value in EDITOR_DATA.items() if value['style'] == 'arbre bg']: #arriere plan
+                        couche['arbre bg'][int((x + offset.x),int(y + offset.y))] = obj
+                    else:
+                        couche['objets fg'][int(x + offset.x),int(y + offset.y)] = obj #premier plan
+        return couche
+                    
     def boucle_evenement(self):
         #ferme le jeu
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                print(self.create_grid())
+                
             self.pan_input(event)
             self.selection_hotkeys(event)
             self.menu_click(event)
@@ -196,13 +258,14 @@ class Editeur:
                     self.trouver_voisins(cellule_actuelle)
                     self.derniere_cellule_selectionne = cellule_actuelle
             else:
+                groups = [self.canvas_objets, self.background] if EDITOR_DATA[self.selection_index]['style'] == 'arbre bg' else [self.canvas_objets, self.foreground]
                 if not self.object_timer.active:
                     CanvasObject(
                         pos = position_souris(),
                         frames = self.animations[self.selection_index]['frames'],
                         tile_id = self.selection_index,
                         origin = self.origin,
-                        group = self.canvas_objets)
+                        group = groups)
                     self.object_timer.activate()
     
     def canvas_remove(self):
@@ -320,6 +383,7 @@ class Editeur:
             self.current_clouds.append({'surf': surf, 'pos': pos, 'speed': randint(20,50)})
     
     def draw_level(self):
+        self.background.draw(self.display_surface)
         for cell_pos, tile in self.canvas_data.items():
             pos = self.origin + vector(cell_pos) * TAILLE_CASES
 
@@ -334,7 +398,7 @@ class Editeur:
                     self.display_surface.blit(surf, pos)
 
             if tile.has_terrain:
-                terrain_string = ''.join(tile.terrain_voisins)
+                terrain_string = ''.join(tile.cases_terrain)
                 terrain_style = terrain_string if terrain_string in self.cases_terrain else 'X'
                 self.display_surface.blit(self.cases_terrain[terrain_style], pos)
 
@@ -351,7 +415,7 @@ class Editeur:
                 index = int(self.animations[tile.enemy]['frame index'])
                 surf = frames[index]
                 self.display_surface.blit(surf, pos)
-        self.canvas_objets.draw(self.display_surface)
+        self.foreground.draw(self.display_surface)
     #dessin
     def dessin_cases_lignes(self):
         colonnes = LARGEUR_FENETRE //TAILLE_CASES
@@ -387,7 +451,7 @@ class Editeur:
         self.menu.afficher(self.selection_index)
         
 class CanvasTile:
-    def __init__(self, tile_id):
+    def __init__(self, tile_id, offset = vector()):
 
         # terrain
         self.has_terrain = False
@@ -406,16 +470,19 @@ class CanvasTile:
         # objects
         self.objects = []
 
-        self.add_id(tile_id)
+        self.add_id(tile_id, offset = offset)
         self.is_empty = False
 
-    def add_id(self, tile_id):
+    def add_id(self, tile_id, offset = vector()):
         options = {key: value['style'] for key, value in EDITOR_DATA.items()}
         match options[tile_id]:
             case 'terrain': self.has_terrain = True
             case 'eau': self.has_water = True
             case 'piece': self.coin = tile_id
             case 'ennemie': self.enemy = tile_id
+            case _:
+                if (tile_id, offset) not in self.objects:
+                    self.objects.append((tile_id, offset))
             
     def remove_id(self, tile_id):
         options = {key: value['style'] for key, value in EDITOR_DATA.items()}
@@ -429,7 +496,13 @@ class CanvasTile:
     def verifier_contenue(self):
         if not self.has_terrain and not self.has_water and not self.coin and not self.enemy:
             self.is_empty = True
-            
+        
+    def get_water(self):
+        return 'bottom' if self.water_on_top else 'top'    
+    
+    def get_terrain(self):
+        return ''.join(self.cases_terrain)
+    
 class CanvasObject(pygame.sprite.Sprite):
     def __init__(self, pos, frames, tile_id, origin, group):
         super().__init__(group)
