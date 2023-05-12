@@ -110,7 +110,8 @@ class Editeur:
                     'frames': graphics,
                     'length': len(graphics)
                 }
-        
+        #preview
+        self.preview_surfs = {key: load(value['preview']) for key, value in EDITOR_DATA.items() if value['preview']}
     def animation_uptade(self, dt):
         for value in self.animations.values():
             value['frame index'] += (VITESSE_ANIMATION * dt) / 1.5
@@ -222,6 +223,42 @@ class Editeur:
                 if sprite.selected:
                     sprite.drag_end(self.origin)
                     self.objet_drag_active = False
+    
+    def preview(self):
+        #dessiner des lignes autour des objets quand on passe dessus
+        objets_selectionne = self.souris_sur_objets()
+        if not self.menu.rect.collidepoint(position_souris()):
+            if objets_selectionne:
+                rect = objets_selectionne.rect.inflate(10,10)
+                couleur ='black'
+                largeur = 3
+                taille = 15
+                
+                #en haut a gauche
+                pygame.draw.lines(self.display_surface, couleur, False, ((rect.left,rect.top + taille), rect.topleft, (rect.left + taille,rect.top)), largeur)
+                #en haut a droite
+                pygame.draw.lines(self.display_surface, couleur, False, ((rect.right - taille,rect.top), rect.topright, (rect.right,rect.top + taille)), largeur)
+                #en bas a droite
+                pygame.draw.lines(self.display_surface, couleur, False, ((rect.right - taille,rect.bottom), rect.bottomright, (rect.right,rect.bottom - taille)), largeur)
+                #en bas a gauche
+                pygame.draw.lines(self.display_surface, couleur, False, ((rect.left,rect.bottom - taille), rect.bottomleft, (rect.left + taille,rect.bottom)), largeur)
+                
+            else:
+                #previsualisation des cases et objets
+                type_dict = {key: value['type'] for key, value in EDITOR_DATA.items()}
+                surf = self.preview_surfs[self.selection_index].copy()
+                surf.set_alpha(200)
+                
+                #cases
+                if type_dict[self.selection_index] == 'tile':
+                    current_cell = self.cellule_actuelle()
+                    rect = surf.get_rect(topleft = self.origin + vector(current_cell) * TAILLE_CASES)
+                #objets
+                else:
+                    rect = surf.get_rect(center = position_souris())
+                
+                self.display_surface.blit(surf, rect)
+                
     def draw_level(self):
         for cell_pos, tile in self.canvas_data.items():
             pos = self.origin + vector(cell_pos) * TAILLE_CASES
@@ -285,6 +322,7 @@ class Editeur:
         self.dessin_cases_lignes()
         self.draw_level()
         pygame.draw.circle(self.display_surface, 'red', self.origin, 10)
+        self.preview()
         self.menu.afficher(self.selection_index)
         
 class CanvasTile:
