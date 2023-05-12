@@ -7,6 +7,7 @@ from pygame.image import load
 from menu import Menu
 from timer import Timer
 from support import*
+from random import choice, randint
 import sys
 class Editeur:
     def __init__(self, cases_terrain):
@@ -14,8 +15,17 @@ class Editeur:
         self.display_surface = pygame.display.get_surface()
         self.canvas_data = {}
         
+        #importation
         self.cases_terrain = cases_terrain
         self.imports()
+        
+        #nuages
+        self.current_clouds = []
+        self.cloud_surf = import_folder('Graphique/Nuage')
+        self.cloud_timer = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.cloud_timer, 2000)
+        self.startup_clouds()
+        
         #navigation
         self.origin = vector()
         self.pan_active = False
@@ -112,6 +122,7 @@ class Editeur:
                 }
         #preview
         self.preview_surfs = {key: load(value['preview']) for key, value in EDITOR_DATA.items() if value['preview']}
+        
     def animation_uptade(self, dt):
         for value in self.animations.values():
             value['frame index'] += (VITESSE_ANIMATION * dt) / 1.5
@@ -130,7 +141,8 @@ class Editeur:
             self.objet_drag(event)
             self.canvas_add()
             self.canvas_remove()
-
+            self.creation_nuages(event)
+            
     def souris_sur_objets(self):
         for sprite in self.canvas_objets:
             if sprite.rect.collidepoint(position_souris()):
@@ -259,6 +271,54 @@ class Editeur:
                 
                 self.display_surface.blit(surf, rect)
                 
+    def display_sky(self, dt):    
+        self.display_surface.fill(COULEUR_CIEL)        
+        y = self.sky_handle.rect.centery
+        
+        #lignes d'horizon
+        if y > 0:
+            horizon_rect1 = pygame.Rect(0,y - 10,LARGEUR_FENETRE,10)
+            horizon_rect2 = pygame.Rect(0,y - 16,LARGEUR_FENETRE,4)
+            horizon_rect3 = pygame.Rect(0,y - 20,LARGEUR_FENETRE,2)
+            pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect1)
+            pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect2)
+            pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect3)
+        
+            self.afficher_nuages(dt, y)
+        
+        #mer
+        if 0 < y < HAUTEUR_FENETRE:
+            mer_rect = pygame.Rect(0,y,LARGEUR_FENETRE,HAUTEUR_FENETRE)
+            pygame.draw.rect(self.display_surface, COULEUR_MER, mer_rect)
+            pygame.draw.line(self.display_surface, COULEUR_HORIZON, (0,y), (LARGEUR_FENETRE,y),3)
+            
+        if y < 0:
+            self.display_surface.fill(COULEUR_MER)
+    
+    def afficher_nuages(self, dt, horizon_y):
+        for cloud in self.current_clouds:
+            cloud['pos'][0] -= cloud['speed'] * dt
+            x = cloud['pos'][0]
+            y = horizon_y - cloud['pos'][1]
+            self.display_surface.blit(cloud['surf'], (x,y))
+    
+    def creation_nuages(self, event):
+        if event.type == self.cloud_timer:
+            surf = choice(self.cloud_surf)
+            surf = pygame.transform.scale2x(surf) if randint(0, 4) < 2 else surf
+            
+            pos = [LARGEUR_FENETRE + randint(50,100),randint(0,HAUTEUR_FENETRE)]
+            self.current_clouds.append({'surf': surf, 'pos': pos, 'speed': randint(20,50)})
+            
+            #supprimer nuages
+            self.current_clouds = [cloud for cloud in self.current_clouds if cloud['pos'][0] > -400]
+    
+    def startup_clouds(self):
+        for i in range(20):
+            surf = pygame.transform.scale2x(choice(self.cloud_surf)) if randint(0,4) < 2 else choice(self.cloud_surf)
+            pos = [randint(0, LARGEUR_FENETRE), randint(0, HAUTEUR_FENETRE)]
+            self.current_clouds.append({'surf': surf, 'pos': pos, 'speed': randint(20,50)})
+    
     def draw_level(self):
         for cell_pos, tile in self.canvas_data.items():
             pos = self.origin + vector(cell_pos) * TAILLE_CASES
@@ -319,9 +379,10 @@ class Editeur:
         self.object_timer.uptade()
         #dessin
         self.display_surface.fill('gray')
+        self.display_sky(dt)
         self.dessin_cases_lignes()
         self.draw_level()
-        pygame.draw.circle(self.display_surface, 'red', self.origin, 10)
+        #pygame.draw.circle(self.display_surface, 'red', self.origin, 10)
         self.preview()
         self.menu.afficher(self.selection_index)
         
