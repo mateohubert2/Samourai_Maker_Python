@@ -130,6 +130,10 @@ class Editeur:
             self.canvas_add()
             self.canvas_remove()
 
+    def souris_sur_objets(self):
+        for sprite in self.canvas_objets:
+            if sprite.rect.collidepoint(position_souris()):
+                return sprite
             
     def pan_input(self, event):
         
@@ -190,6 +194,14 @@ class Editeur:
     
     def canvas_remove(self):
         if boutons_souris()[2] and not self.menu.rect.collidepoint(position_souris()):
+            
+            #objets
+            selected_object = self.souris_sur_objets()
+            if selected_object:
+                if EDITOR_DATA[selected_object.tile_id]['style'] not in ('personnage', 'ciel'):
+                    selected_object.kill()
+            
+            #cases
             if self.canvas_data:
                 current_cell = self.cellule_actuelle()
                 if current_cell in self.canvas_data:
