@@ -41,13 +41,27 @@ class Coin(Animated):
         self.coin_type = coin_type 
         
 class Ennemie2(Generic):
-	def __init__(self, assets, pos, group):
+    def __init__(self, assets, pos, group):
 
-		self.animation_frames = assets
-		self.frame_index = 0
-		self.orientation = 'right'
-		surf = self.animation_frames[f'run_{self.orientation}'][self.frame_index]
-		super().__init__(pos, surf, group)
+        self.animation_frames = assets
+        self.frame_index = 0
+        self.orientation = 'right'
+        surf = self.animation_frames[f'run_{self.orientation}'][self.frame_index]
+        super().__init__(pos, surf, group)
+        self.rect.bottom = self.rect.top + TAILLE_CASES
+        
+class Ennemie(Generic):
+    def __init__(self, orientation, assets, pos, group):
+        self.orientation = orientation
+        self.animation_frames = assets.copy()
+        if orientation == 'right':
+            for key, value in self.animation_frames.items():
+                self.animation_frames[key] = [pygame.transform.flip(surf, True, False) for surf in value]
+                
+        self.frame_index = 0
+        self.status = 'idle'
+        super().__init__(pos, self.animation_frames[self.status][self.frame_index], group)
+        self.rect.bottom = self.rect.top + TAILLE_CASES
         
 class Player(Generic):
     def __init__(self, pos, group):

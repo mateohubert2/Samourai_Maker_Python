@@ -39,6 +39,7 @@ class Main:
         self.arbre = {folder: import_folder(f'Graphique/Arbre/{folder}') for folder in list(walk('Graphique/Arbre'))[0][1]}
         
         self.ennemie2 = {folder: import_folder(f'Graphique/Ennemie/Animation_Ennemie_2/{folder}') for folder in list(walk('Graphique/Ennemie/Animation_Ennemie_2'))[0][1]}
+        self.ennemie = {folder: import_folder(f'Graphique/Ennemie/Animation_Ennemie_1/{folder}') for folder in list(walk('Graphique/Ennemie/Animation_Ennemie_1'))[0][1]}
         
     def toggle(self):
         self.editeur_active = not self.editeur_active
@@ -55,7 +56,8 @@ class Main:
                 'diamond': self.diamond,
                 'particle': self.particule,
                 'arbre': self.arbre,
-                'ennemie2': self.ennemie2
+                'ennemie2': self.ennemie2,
+                'ennemie': self.ennemie
             })
     
     def lancement(self):

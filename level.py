@@ -4,7 +4,7 @@ from pygame.math import Vector2 as vector
 from parametres import*
 from support import*
 
-from sprites import Generic, Animated, Particule, Coin, Player, Ennemie2
+from sprites import Generic, Animated, Particule, Coin, Player, Ennemie2, Ennemie
 
 class Level:
     def __init__(self, grid, switch, asset_dict):
@@ -39,6 +39,7 @@ class Level:
                         case 5: Coin('silver', asset_dict['silver'], pos, [self.all_sprites, self.coin_sprites])
                         case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites])
                         
+                        case 7: Ennemie('left',asset_dict['ennemie'], pos, self.all_sprites)
                         case 8: Ennemie2(asset_dict['ennemie2'], pos, [self.all_sprites, self.damage_sprites])
                         
                         case 9: Animated(asset_dict['arbre']['Animation_Arbre1fg'], pos, self.all_sprites)
