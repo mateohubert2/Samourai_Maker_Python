@@ -40,6 +40,15 @@ class Coin(Animated):
         self.rect = self.image.get_rect(center = pos)
         self.coin_type = coin_type 
         
+class Ennemie2(Generic):
+	def __init__(self, assets, pos, group):
+
+		self.animation_frames = assets
+		self.frame_index = 0
+		self.orientation = 'right'
+		surf = self.animation_frames[f'run_{self.orientation}'][self.frame_index]
+		super().__init__(pos, surf, group)
+        
 class Player(Generic):
     def __init__(self, pos, group):
         super().__init__(pos, pygame.Surface((32,64)), group)

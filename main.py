@@ -5,6 +5,8 @@ from support import*
 from pygame.math import Vector2 as vector
 from editeur import Editeur
 from level import Level
+from os import walk
+
 class Main:
     def __init__(self):
         pygame.init()
@@ -16,11 +18,6 @@ class Main:
         self.transition = Transition(self.toggle)
         self.editeur = Editeur(self.cases_terrain, self.switch)
         
-        self.gold = import_folder('Graphique/Piece/Animation_Piece_Gold')
-        self.silver = import_folder('Graphique/Piece/Animation_Piece_Silver')
-        self.diamond = import_folder('Graphique/Piece/Animation_Piece_Diamond')
-        self.particule = import_folder('Graphique/Piece/Particule')
-        
         
         #cureur
         surf = load('Graphique/curseur/souris.png').convert_alpha()
@@ -31,6 +28,18 @@ class Main:
         self.cases_terrain = import_folder_dict('Graphique/Terrain/Land')  
         self.bas_eau = load('Graphique/Eau/eau.png').convert_alpha()
         self.water_top_animation = import_folder('Graphique/Eau/Animations')
+        
+        #piece
+        self.gold = import_folder('Graphique/Piece/Animation_Piece_Gold')
+        self.silver = import_folder('Graphique/Piece/Animation_Piece_Silver')
+        self.diamond = import_folder('Graphique/Piece/Animation_Piece_Diamond')
+        self.particule = import_folder('Graphique/Piece/Particule')
+        
+        #arbre
+        self.arbre = {folder: import_folder(f'Graphique/Arbre/{folder}') for folder in list(walk('Graphique/Arbre'))[0][1]}
+        
+        self.ennemie2 = {folder: import_folder(f'Graphique/Ennemie/Animation_Ennemie_2/{folder}') for folder in list(walk('Graphique/Ennemie/Animation_Ennemie_2'))[0][1]}
+        
     def toggle(self):
         self.editeur_active = not self.editeur_active
     
@@ -44,7 +53,9 @@ class Main:
                 'gold': self.gold,
                 'silver': self.silver,
                 'diamond': self.diamond,
-                'particle': self.particule
+                'particle': self.particule,
+                'arbre': self.arbre,
+                'ennemie2': self.ennemie2
             })
     
     def lancement(self):
