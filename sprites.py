@@ -60,8 +60,50 @@ class Ennemie2(Generic):
         surf = self.animation_frames[f'run_{self.orientation}'][self.frame_index]
         super().__init__(pos, surf, group)
         self.rect.bottom = self.rect.top + TAILLE_CASES
+        self.mask = pygame.mask.from_surface(self.image)
         
         self.direction = vector(choice((1,-1)),0)
+        self.orientation = 'left' if self.direction.x < 0 else 'right'
+        self.pos = vector(self.rect.topleft)
+        self.speed = 120
+        self.collision_sprites = collision_sprites
+        
+        #detruire l'ennemie si il n'est pas au sol
+        if not [sprite for sprite in collision_sprites if sprite.rect.collidepoint(self.rect.midbottom + vector(0,10))]:
+            self.kill()
+            
+    def animate(self, dt):
+        current_animation = self.animation_frames[f'run_{self.orientation}']
+        self.frame_index += VITESSE_ANIMATION * dt
+        self.frame_index = 0 if self.frame_index >= len(current_animation) else self.frame_index
+        self.image = current_animation[int(self.frame_index)]
+        self.mask = pygame.mask.from_surface(self.image)
+    
+    def move(self, dt):
+        right_gap = self.rect.bottomright + vector(1,1)
+        right_block = self.rect.midright + vector(1,0)
+        left_gap = self.rect.bottomleft + vector(-1,1)
+        left_block = self.rect.midleft + vector(-1,0)
+        
+        if self.direction.x > 0:
+            floor_sprites = [sprite for sprite in self.collision_sprites if sprite.rect.collidepoint(right_gap)]
+            wall_sprites = [sprite for sprite in self.collision_sprites if sprite.rect.collidepoint(right_block)]
+            
+            if wall_sprites or not floor_sprites:
+                self.direction *= -1
+                self.orientation = 'left'
+            
+        if self.direction.x < 0:
+            if not[sprite for sprite in self.collision_sprites if sprite.rect.collidepoint(left_gap)] or [sprite for sprite in self.collision_sprites if sprite.rect.collidepoint(left_block)]:
+                self.direction *= -1
+                self.orientation = 'right'
+            
+        self.pos.x += self.direction.x * self.speed * dt
+        self.rect.x = round(self.pos.x)
+    
+    def update(self, dt):
+        self.animate(dt)
+        self.move(dt)
         
 class Ennemie(Generic):
     def __init__(self, orientation, assets, pos, group, pearl_surf, damage_sprites):
@@ -110,7 +152,8 @@ class Ennemie(Generic):
 class Pearl(Generic):
     def __init__(self, pos, direction, surf, group):
         super().__init__(pos, surf, group)       
-
+        self.mask = pygame.mask.from_surface(self.image)
+        
         self.pos = vector(self.rect.topleft)
         self.direction = direction
         self.speed = 400
@@ -135,6 +178,8 @@ class Player(Generic):
         self.orientation = 'right'
         surf = self.animation_frames[f'{self.status}_{self.orientation}'][self.frame_index]
         super().__init__(pos, surf, group)
+        self.mask = pygame.mask.from_surface(self.image)
+        
         
         #mouvement
         self.direction = vector()
@@ -146,6 +191,13 @@ class Player(Generic):
         #collision
         self.collision_sprites = collision_sprites
         self.hitbox = self.rect.inflate(-16,-14)
+        
+        self.invul_timer = Timer(200)
+        
+    def damage(self):
+        if not self.invul_timer.active:
+            self.invul_timer.activate()
+            self.direction.y -= 1.5
         
     def get_status(self):
         if self.direction.y < 0:
@@ -160,7 +212,13 @@ class Player(Generic):
         self.frame_index += VITESSE_ANIMATION * dt / 2
         self.frame_index = 0 if self.frame_index >= len(current_animation) else self.frame_index
         self.image = current_animation[int(self.frame_index)]
-    
+        self.mask = pygame.mask.from_surface(self.image)
+
+        if self.invul_timer.active:
+           surf = self.mask.to_surface()
+           surf.set_colorkey('black')
+           self.image = surf
+        
     def input(self):
         keys =  pygame.key.get_pressed()
         if keys[pygame.K_d]:
@@ -216,6 +274,7 @@ class Player(Generic):
         self.apply_gravity(dt)
         self.move(dt)
         self.check_on_floor()
+        self.invul_timer.uptade()
         
         self.get_status()
         self.animate(dt)

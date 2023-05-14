@@ -74,7 +74,11 @@ class Level:
         collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)      
         for sprite in collided_coins:
             Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
-        
+    
+    def get_damage(self):
+        collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
+        if collision_sprites:
+            self.player.damage()
         
     def boucle_evenement(self):
         for event in pygame.event.get():
@@ -88,6 +92,7 @@ class Level:
         self.boucle_evenement()
         self.all_sprites.update(dt)
         self.get_coins()
+        self.get_damage()
         
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
