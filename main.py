@@ -41,6 +41,9 @@ class Main:
         self.ennemie2 = {folder: import_folder(f'Graphique/Ennemie/Animation_Ennemie_2/{folder}') for folder in list(walk('Graphique/Ennemie/Animation_Ennemie_2'))[0][1]}
         self.ennemie = {folder: import_folder(f'Graphique/Ennemie/Animation_Ennemie_1/{folder}') for folder in list(walk('Graphique/Ennemie/Animation_Ennemie_1'))[0][1]}
         
+        #joueur
+        self.player_graphics = {folder: import_folder(f'Graphique/Personnage/Animation_Personnage/{folder}') for folder in list(walk('Graphique/Personnage/Animation_Personnage'))[0][1]}
+        
     def toggle(self):
         self.editeur_active = not self.editeur_active
     
@@ -57,7 +60,8 @@ class Main:
                 'particle': self.particule,
                 'arbre': self.arbre,
                 'ennemie2': self.ennemie2,
-                'ennemie': self.ennemie
+                'ennemie': self.ennemie,
+                'player': self.player_graphics
             })
     
     def lancement(self):

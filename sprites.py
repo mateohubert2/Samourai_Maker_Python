@@ -69,28 +69,48 @@ class Ennemie(Generic):
         self.rect.bottom = self.rect.top + TAILLE_CASES
         
 class Player(Generic):
-    def __init__(self, pos, group, collision_sprites):
-        super().__init__(pos, pygame.Surface((80,64)), group)
-        self.image.fill('red')
+    def __init__(self, pos, assets, group, collision_sprites):
+        
+        self.animation_frames = assets
+        self.frame_index = 0
+        self.status = 'idle'
+        self.orientation = 'right'
+        surf = self.animation_frames[f'{self.status}_{self.orientation}'][self.frame_index]
+        super().__init__(pos, surf, group)
         
         #mouvement
         self.direction = vector()
         self.pos = vector(self.rect.center)
-        self.speed = 300
-        self.gravity = 4
+        self.speed = 310
+        self.gravity = 6
         self.on_floor = False
         
         #collision
         self.collision_sprites = collision_sprites
         self.hitbox = self.rect.inflate(-16,-14)
         
-        
+    def get_status(self):
+        if self.direction.y < 0:
+            self.status = 'jump'
+        elif self.direction.y > 1:
+            self.status = 'fall'
+        else:
+           self.status = 'run' if self.direction.x != 0 else 'idle'
+            
+    def animate(self, dt):
+        current_animation = self.animation_frames[f'{self.status}_{self.orientation}']
+        self.frame_index += VITESSE_ANIMATION * dt / 2
+        self.frame_index = 0 if self.frame_index >= len(current_animation) else self.frame_index
+        self.image = current_animation[int(self.frame_index)]
+    
     def input(self):
         keys =  pygame.key.get_pressed()
         if keys[pygame.K_d]:
             self.direction.x = 1
+            self.orientation = 'right'
         elif keys[pygame.K_q]:
             self.direction.x = -1
+            self.orientation = 'left'
         else: self.direction.x = 0
         
         if keys[pygame.K_SPACE] and self.on_floor:
@@ -138,3 +158,6 @@ class Player(Generic):
         self.apply_gravity(dt)
         self.move(dt)
         self.check_on_floor()
+        
+        self.get_status()
+        self.animate(dt)

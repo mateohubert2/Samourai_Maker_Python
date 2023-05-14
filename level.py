@@ -34,7 +34,7 @@ class Level:
                             Generic(pos, asset_dict['water bottom'], self.all_sprites)
                     
                     match data:
-                        case 0: self.player = Player(pos, self.all_sprites, self.collision_sprites)
+                        case 0: self.player = Player(pos, asset_dict['player'] ,self.all_sprites, self.collision_sprites)
                         case 4: Coin('gold', asset_dict['gold'], pos, [self.all_sprites, self.coin_sprites])
                         case 5: Coin('silver', asset_dict['silver'], pos, [self.all_sprites, self.coin_sprites])
                         case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites])
@@ -78,4 +78,3 @@ class Level:
         
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.draw(self.display_surface)
-        pygame.draw.rect(self.display_surface, 'yellow', self.player.hitbox)

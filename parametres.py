@@ -6,7 +6,7 @@ VITESSE_ANIMATION = 8
 COULEUR_LIGNE = 'black'
 
 EDITOR_DATA = {
-    0: {'style': 'personnage', 'type': 'object', 'menu': None, 'menu_surf': None, 'preview': None, 'graphics': 'Graphique/Personnage/Animation_Personnage'},    
+    0: {'style': 'personnage', 'type': 'object', 'menu': None, 'menu_surf': None, 'preview': None, 'graphics': 'Graphique/Personnage/Animation_Personnage/Preview'},    
     1: {'style': 'ciel', 'type': 'object', 'menu': None, 'menu_surf': None, 'preview': None, 'graphics': None},
     
     2: {'style': 'terrain', 'type': 'tile', 'menu': 'terrain', 'menu_surf': 'Graphique/Terrain/terrain.png', 'preview': 'Graphique/Preview/terrain.png', 'graphics': None},
