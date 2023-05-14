@@ -67,6 +67,11 @@ class Editeur:
             group = [self.canvas_objets, self.background]
             )
         
+        #musique
+        self.editor_music = pygame.mixer.Sound('audio/Explorer.ogg')
+        self.editor_music.set_volume(0.4)
+        self.editor_music.play(loops = -1)
+        
     def cellule_actuelle(self, obj = None):
         distance_de_origine = vector(position_souris()) - self.origin if not obj else vector(obj.distance_to_origin) - self.origin
 
@@ -197,6 +202,7 @@ class Editeur:
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 self.switch(self.create_grid())
+                self.editor_music.stop()
                 
             self.pan_input(event)
             self.selection_hotkeys(event)
@@ -224,6 +230,9 @@ class Editeur:
                 self.origin.y -= event.y * 50
             else:
                 self.origin.x -= event.y * 50
+            for sprite in self.canvas_objets:
+                sprite.pan_pos(self.origin)
+            
             
         #panning mise a jour
         if self.pan_active:
@@ -242,7 +251,8 @@ class Editeur:
     
     def menu_click(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.menu.rect.collidepoint(position_souris()):
-          self.selection_index = self.menu.click(position_souris(), boutons_souris())  
+            new_index = self.menu.click(position_souris(), boutons_souris())  
+            self.selection_index = new_index if new_index else self.selection_index  
     
     def canvas_add(self):
         if boutons_souris()[0] and not self.menu.rect.collidepoint(position_souris()) and not self.objet_drag_active:

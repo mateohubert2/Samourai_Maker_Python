@@ -46,9 +46,19 @@ class Main:
         
         self.clouds = import_folder('Graphique/Nuage')
         
+        #musique
+        self.level_sounds = {
+            'coin': pygame.mixer.Sound('audio/coin.wav'),
+            'hit': pygame.mixer.Sound('audio/hit.wav'),
+            'jump': pygame.mixer.Sound('audio/jump.wav'),
+            'music': pygame.mixer.Sound('audio/SuperHero.ogg'),
+        }
+        
     def toggle(self):
         self.editeur_active = not self.editeur_active
-    
+        if self.editeur_active:
+            self.editeur.editor_music.play()
+        
     def switch(self, grid = None):
         self.transition.active = True
         if grid:
@@ -65,8 +75,8 @@ class Main:
                 'ennemie': self.ennemie,
                 'player': self.player_graphics,
                 'pearl': self.pearl,
-                'clouds': self.clouds
-            })
+                'clouds': self.clouds},
+            self.level_sounds)
     
     def lancement(self):
         while True:

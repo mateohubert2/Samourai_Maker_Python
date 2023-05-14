@@ -184,7 +184,7 @@ class Pearl(Generic):
             self.kill()
     
 class Player(Generic):
-    def __init__(self, pos, assets, group, collision_sprites):
+    def __init__(self, pos, assets, group, collision_sprites, jump_sound):
         
         self.animation_frames = assets
         self.frame_index = 0
@@ -208,6 +208,8 @@ class Player(Generic):
         
         self.invul_timer = Timer(200)
         
+        self.jump_sound = jump_sound
+        self.jump_sound.set_volume(0.2)
     def damage(self):
         if not self.invul_timer.active:
             self.invul_timer.activate()
@@ -245,6 +247,7 @@ class Player(Generic):
         
         if keys[pygame.K_SPACE] and self.on_floor:
             self.direction.y = -2
+            self.jump_sound.play()
         
     def move(self, dt):
         #horizontale
