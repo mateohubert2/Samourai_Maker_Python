@@ -57,7 +57,7 @@ class Main:
     def toggle(self):
         self.editeur_active = not self.editeur_active
         if self.editeur_active:
-            self.editeur.editor_music.play()
+            self.editeur.editor_music.play(loops = -1)
         
     def switch(self, grid = None):
         self.transition.active = True
