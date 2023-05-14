@@ -16,6 +16,7 @@ class Level:
         self.coin_sprites = pygame.sprite.Group()
         self.damage_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
+        self.ennemie_sprites = pygame.sprite.Group()
         
         self.build_level(grid, asset_dict)
         
@@ -23,7 +24,7 @@ class Level:
         self.particule_surfs = asset_dict['particle']
     
     def build_level(self, grid, asset_dict):
-          for layer_name, couche in grid.items():
+            for layer_name, couche in grid.items():
               for pos, data in couche.items():
                     if layer_name == 'terrain':
                         Generic(pos, asset_dict['land'][data], [self.all_sprites, self.collision_sprites])
@@ -39,8 +40,19 @@ class Level:
                         case 5: Coin('silver', asset_dict['silver'], pos, [self.all_sprites, self.coin_sprites])
                         case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites])
                         
-                        case 7: Ennemie('left',asset_dict['ennemie'], pos, [self.all_sprites, self.damage_sprites])
-                        case 8: Ennemie2(asset_dict['ennemie2'], pos, [self.all_sprites, self.damage_sprites])
+                        case 7:
+                            Ennemie(orientation = 'left', 
+                                    assets = asset_dict['ennemie'], 
+                                    pos = pos, 
+                                    group = [self.all_sprites, self.collision_sprites, self.ennemie_sprites],
+                                    pearl_surf = asset_dict['pearl'],
+                                    damage_sprites = self.damage_sprites)
+                            
+                            
+                        case 8:
+                            Ennemie2(asset_dict['ennemie2'], pos, [self.all_sprites, self.damage_sprites], self.collision_sprites)
+                        
+                        
                         
                         case 9:
                             Animated(asset_dict['arbre']['Animation_Arbre1fg'], pos, self.all_sprites)
@@ -55,8 +67,9 @@ class Level:
                         case 12: Animated(asset_dict['arbre']['Animation_Arbre1bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                         case 13: Animated(asset_dict['arbre']['Animation_Arbre2bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                         case 14: Animated(asset_dict['arbre']['Animation_Arbre3bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
-                        
-         
+            for sprite in self.ennemie_sprites:
+                sprite.player = self.player
+                     
     def get_coins(self) :
         collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)      
         for sprite in collided_coins:

@@ -1,6 +1,11 @@
+from typing import Any
 import pygame
 from pygame.math import Vector2 as vector
 from parametres import*
+from parametres import LEVEL_LAYERS
+from timer import Timer
+
+from random import choice
 
 class Generic(pygame.sprite.Sprite):
     def __init__(self, pos, surf, group, z = LEVEL_LAYERS['main']):
@@ -8,6 +13,7 @@ class Generic(pygame.sprite.Sprite):
         self.image = surf
         self.rect = self.image.get_rect(topleft = pos)
         self.z = z
+        
 class Block(Generic):
     def __init__(self, pos, size, group):
         surf = pygame.Surface(size)
@@ -46,7 +52,7 @@ class Coin(Animated):
         self.coin_type = coin_type 
         
 class Ennemie2(Generic):
-    def __init__(self, assets, pos, group):
+    def __init__(self, assets, pos, group, collision_sprites):
 
         self.animation_frames = assets
         self.frame_index = 0
@@ -55,8 +61,10 @@ class Ennemie2(Generic):
         super().__init__(pos, surf, group)
         self.rect.bottom = self.rect.top + TAILLE_CASES
         
+        self.direction = vector(choice((1,-1)),0)
+        
 class Ennemie(Generic):
-    def __init__(self, orientation, assets, pos, group):
+    def __init__(self, orientation, assets, pos, group, pearl_surf, damage_sprites):
         self.orientation = orientation
         self.animation_frames = assets.copy()
         if orientation == 'right':
@@ -68,6 +76,56 @@ class Ennemie(Generic):
         super().__init__(pos, self.animation_frames[self.status][self.frame_index], group)
         self.rect.bottom = self.rect.top + TAILLE_CASES
         
+        self.pearl_surf = pearl_surf
+        self.has_shot = False
+        self.attack_cooldown = Timer(2000)
+        self.damage_sprites = damage_sprites
+    
+    def animate(self, dt):
+        current_animation = self.animation_frames[self.status]
+        self.frame_index += VITESSE_ANIMATION * dt
+        if self.frame_index >= len(current_animation):
+            self.frame_index = 0
+            if self.has_shot:
+                self.attack_cooldown.activate()
+                self.has_shot = False
+        self.image = current_animation[int(self.frame_index)]
+        
+        if int(self.frame_index) == 3 and self.status == 'attack' and not self.has_shot:
+            pearl_direction = vector(-1,0) if self.orientation == 'left' else vector(1,0)
+            offset = (pearl_direction * 20) + vector(0, -5) if self.orientation == 'left' else (pearl_direction * 20)
+            Pearl(self.rect.center + offset, pearl_direction, self.pearl_surf, [self.groups()[0], self.damage_sprites])
+            self.has_shot = True
+    def get_status(self):
+        if vector(self.player.rect.center).distance_to(vector(self.rect.center)) < 500 and not self.attack_cooldown.active:
+            self.status = 'attack'
+        else:
+            self.status = 'idle'
+    
+    def update(self, dt):
+        self.get_status()
+        self.animate(dt)
+        self.attack_cooldown.uptade()
+        
+class Pearl(Generic):
+    def __init__(self, pos, direction, surf, group):
+        super().__init__(pos, surf, group)       
+
+        self.pos = vector(self.rect.topleft)
+        self.direction = direction
+        self.speed = 400
+        
+        self.timer = Timer(6000)
+        self.timer.activate()
+
+    def update(self, dt):
+        self.pos.x += self.direction.x * self.speed * dt
+        self.rect.x = round(self.pos.x)
+        
+        self.timer.uptade()
+        if not self.timer.active:
+            self.kill()
+    
 class Player(Generic):
     def __init__(self, pos, assets, group, collision_sprites):
         

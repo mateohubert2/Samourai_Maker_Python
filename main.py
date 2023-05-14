@@ -40,7 +40,7 @@ class Main:
         
         self.ennemie2 = {folder: import_folder(f'Graphique/Ennemie/Animation_Ennemie_2/{folder}') for folder in list(walk('Graphique/Ennemie/Animation_Ennemie_2'))[0][1]}
         self.ennemie = {folder: import_folder(f'Graphique/Ennemie/Animation_Ennemie_1/{folder}') for folder in list(walk('Graphique/Ennemie/Animation_Ennemie_1'))[0][1]}
-        
+        self.pearl = load('Graphique/Ennemie/Pearl/pearl.png').convert_alpha()
         #joueur
         self.player_graphics = {folder: import_folder(f'Graphique/Personnage/Animation_Personnage/{folder}') for folder in list(walk('Graphique/Personnage/Animation_Personnage'))[0][1]}
         
@@ -61,7 +61,8 @@ class Main:
                 'arbre': self.arbre,
                 'ennemie2': self.ennemie2,
                 'ennemie': self.ennemie,
-                'player': self.player_graphics
+                'player': self.player_graphics,
+                'pearl': self.pearl
             })
     
     def lancement(self):
