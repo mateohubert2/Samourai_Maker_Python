@@ -12,7 +12,7 @@ class Level:
         self.switch = switch
         
         #groups
-        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites = CameraGroup()
         self.coin_sprites = pygame.sprite.Group()
         self.damage_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
@@ -29,9 +29,9 @@ class Level:
                         Generic(pos, asset_dict['land'][data], [self.all_sprites, self.collision_sprites])
                     if layer_name == 'eau':
                         if data == 'top':
-                            Animated(asset_dict['water top'], pos, self.all_sprites)
+                            Animated(asset_dict['water top'], pos, self.all_sprites, LEVEL_LAYERS['water'])
                         else:
-                            Generic(pos, asset_dict['water bottom'], self.all_sprites)
+                            Generic(pos, asset_dict['water bottom'], self.all_sprites, LEVEL_LAYERS['water'])
                     
                     match data:
                         case 0: self.player = Player(pos, asset_dict['player'] ,self.all_sprites, self.collision_sprites)
@@ -52,9 +52,9 @@ class Level:
                             Animated(asset_dict['arbre']['Animation_Arbre3fg'], pos, self.all_sprites)
                             Block(pos + vector(15,25), (100, 60), self.collision_sprites)
                         
-                        case 12: Animated(asset_dict['arbre']['Animation_Arbre1bg'], pos, self.all_sprites)
-                        case 13: Animated(asset_dict['arbre']['Animation_Arbre2bg'], pos, self.all_sprites)
-                        case 14: Animated(asset_dict['arbre']['Animation_Arbre3bg'], pos, self.all_sprites)
+                        case 12: Animated(asset_dict['arbre']['Animation_Arbre1bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+                        case 13: Animated(asset_dict['arbre']['Animation_Arbre2bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+                        case 14: Animated(asset_dict['arbre']['Animation_Arbre3bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
                         
          
     def get_coins(self) :
@@ -77,4 +77,21 @@ class Level:
         self.get_coins()
         
         self.display_surface.fill(COULEUR_CIEL)
-        self.all_sprites.draw(self.display_surface)
+        self.all_sprites.custom_draw(self.player)
+        
+class CameraGroup(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__()
+        self.display_surface = pygame.display.get_surface()
+        self.offset = vector()
+        
+    def custom_draw(self, player):
+        self.offset.x = player.rect.centerx - LARGEUR_FENETRE / 2
+        self.offset.y = player.rect.centery - HAUTEUR_FENETRE / 2
+        
+        for sprite in self:
+            for layer in LEVEL_LAYERS.values():
+                if sprite.z == layer:
+                    offset_rect = sprite.rect.copy()
+                    offset_rect.center -= self.offset
+                    self.display_surface.blit(sprite.image, offset_rect)
