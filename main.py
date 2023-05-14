@@ -44,6 +44,8 @@ class Main:
         #joueur
         self.player_graphics = {folder: import_folder(f'Graphique/Personnage/Animation_Personnage/{folder}') for folder in list(walk('Graphique/Personnage/Animation_Personnage'))[0][1]}
         
+        self.clouds = import_folder('Graphique/Nuage')
+        
     def toggle(self):
         self.editeur_active = not self.editeur_active
     
@@ -62,7 +64,8 @@ class Main:
                 'ennemie2': self.ennemie2,
                 'ennemie': self.ennemie,
                 'player': self.player_graphics,
-                'pearl': self.pearl
+                'pearl': self.pearl,
+                'clouds': self.clouds
             })
     
     def lancement(self):

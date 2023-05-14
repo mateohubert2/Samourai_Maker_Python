@@ -4,7 +4,7 @@ from pygame.math import Vector2 as vector
 from parametres import*
 from parametres import LEVEL_LAYERS
 from timer import Timer
-
+from random import randint
 from random import choice
 
 class Generic(pygame.sprite.Sprite):
@@ -18,6 +18,20 @@ class Block(Generic):
     def __init__(self, pos, size, group):
         surf = pygame.Surface(size)
         super().__init__(pos, surf, group)
+        
+class Cloud(Generic):
+    def __init__(self, pos, surf, group, left_limit):
+        super().__init__(pos, surf, group, LEVEL_LAYERS[('clouds')])
+        self.left_limit = left_limit      
+                
+        self.pos = vector(self.rect.topleft)
+        self.speed = randint(20,30)
+        
+    def update(self, dt):
+        self.pos.x -= self.speed * dt
+        self.rect.x = round(self.pos.x)
+        if self.rect.x <= self.left_limit:
+            self.kill()
         
 class Animated(Generic):
     def __init__(self, assets, pos, group, z = LEVEL_LAYERS['main']):
