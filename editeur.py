@@ -9,8 +9,21 @@ from timer import Timer
 from support import*
 from random import choice, randint
 import sys
+
+#definition de la classe editeur qui va gérer ce qui se passe dans l'éditeur de niveau
 class Editeur:
+    #la fonction __init__ est une fonction spéciale qui permet l'instanciation d'une classe c'est un sorte de constructeur.
+    #le constructeur a besoin de self pour acceder aux attributs de l'objet, des cases qui pourront etre placé et de switch pour pouvoir passer au lvl
     def __init__(self, cases_terrain, switch):
+        """_summary_
+        La fonction __init__ va servir a instancier toutes les variables et objets nécessaires au bon fonctionnement de l'éditeur.
+        On utilisera majoritairement des dictionnaires de données et des listes comme pour canvas_data qui va contenir toutes les
+        informations des cases placées. 
+        Args:
+            cases_terrain (dictionnaire): contient toutes les cases terrain dans un dictionnaire par exemple A, AB, ABC...
+            switch (dictionnaire de données et listes de cases): contient toutes les images importés classés par types
+            ainsi que l'information de tout les elements graphique du niveau crée par le joueur a transmettre au level
+        """
         #description du main
         self.display_surface = pygame.display.get_surface()
         self.canvas_data = {}
