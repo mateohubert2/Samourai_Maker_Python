@@ -6,6 +6,9 @@ from parametres import LEVEL_LAYERS
 from timer import Timer
 from random import randint
 from random import choice
+from support import import_folder
+#from main import dt
+
 
 class Generic(pygame.sprite.Sprite):
     def __init__(self, pos, surf, group, z = LEVEL_LAYERS['main']):
@@ -184,10 +187,15 @@ class Pearl(Generic):
             self.kill()
     
 class Player(Generic):
-    def __init__(self, pos, assets, group, collision_sprites, jump_sound):
+    def __init__(self, pos, assets, group, collision_sprites, jump_sound, surface):
         
         self.animation_frames = assets
         self.frame_index = 0
+        #nouvellefonction
+        self.import_dust_particule()
+        self.dust_frame_index = 0
+        self.dust_animation_speed = 0.15
+        self.display_surface = surface
         self.status = 'idle'
         self.orientation = 'right'
         surf = self.animation_frames[f'{self.status}_{self.orientation}'][self.frame_index]
@@ -285,6 +293,21 @@ class Player(Generic):
                     self.rect.centery = self.hitbox.centery
                     self.pos.y = self.hitbox.centery
                     self.direction.y = 0
+    #nouvellefonction
+    def import_dust_particule(self):
+        self.dust_run_particule = import_folder('Graphique/Particule/dust_particles/run')
+    
+    def run_dust_animation(self, dt):
+        #keys =  pygame.key.get_pressed()
+        #if (keys[pygame.K_d] or keys[pygame.K_q]) and self.on_floor:
+        self.dust_frame_index += VITESSE_ANIMATION * dt
+        if self.dust_frame_index >= len(self.dust_run_particule):
+            self.dust_frame_index = 0
+        dust_particule = self.dust_run_particule[int(self.dust_frame_index)]
+            
+        #if self.orientation == 'right':
+        pos = self.rect.bottomleft
+        self.display_surface.blit(dust_particule, pos)
     
     def update(self, dt):
         self.input()
@@ -295,3 +318,4 @@ class Player(Generic):
         
         self.get_status()
         self.animate(dt)
+        self.run_dust_animation(dt)

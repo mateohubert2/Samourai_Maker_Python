@@ -59,7 +59,7 @@ class Level:
                             Generic(pos, asset_dict['water bottom'], self.all_sprites, LEVEL_LAYERS['water'])
                     
                     match data:
-                        case 0: self.player = Player(pos, asset_dict['player'] ,self.all_sprites, self.collision_sprites, jump_sound)
+                        case 0: self.player = Player(pos, asset_dict['player'] ,self.all_sprites, self.collision_sprites, jump_sound, self.display_surface)
                         case 1:
                             self.horizon_y = pos[1]
                             self.all_sprites.horizon_y = pos[1]
