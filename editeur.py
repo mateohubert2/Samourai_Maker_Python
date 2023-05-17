@@ -71,7 +71,7 @@ class Editeur:
             origin = self.origin,
             group = [self.canvas_objets, self.foreground])
         
-        #sky
+        #ciel
         self.sky_handle = CanvasObject(
             pos = (LARGEUR_FENETRE / 2, HAUTEUR_FENETRE / 2),
             frames = [self.sky_handle_surf],

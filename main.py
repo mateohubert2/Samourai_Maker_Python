@@ -5,6 +5,7 @@ from support import*
 from pygame.math import Vector2 as vector
 from editeur import Editeur
 from level import Level
+from ATH import ATH
 from os import walk
 
 class Main:
@@ -17,7 +18,14 @@ class Main:
         self.display_surface = pygame.display.set_mode((LARGEUR_FENETRE, HAUTEUR_FENETRE))
         self.clock = pygame.time.Clock()
         self.imports()
-        
+        #definition de la partie qui gere la vie et le nombre de piece
+        self.vie_max = 100
+        self.vie_actuelle = 100
+        self.piece = 0
+
+        #ath
+        self.ath = ATH(self.display_surface)
+
         self.editeur_active = True
         self.transition = Transition(self.toggle)
         self.editeur = Editeur(self.cases_terrain, self.switch)
@@ -106,7 +114,11 @@ class Main:
                 self.editeur.lancement(dt)
             else:
                 self.level.lancement(dt)
+                self.ath.barre_de_vie(self.vie_actuelle,self.vie_max)
+                self.ath.nombre_piece(self.piece)
+                
             self.transition.display(dt)
+        
             pygame.display.update()
 
 class Transition:
