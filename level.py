@@ -5,11 +5,13 @@ from parametres import*
 from support import*
 from random import choice
 from random import randint
+from main import Main
+from ATH import *
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
 
 class Level:
-    def __init__(self, grid, switch, asset_dict, audio):
+    def __init__(self, grid, switch, asset_dict, audio, update_piece):
         self.display_surface = pygame.display.get_surface()
         self.switch = switch
         
@@ -27,7 +29,10 @@ class Level:
             'left': -LARGEUR_FENETRE,
             'right': sorted(list(grid['terrain'].keys()), key = lambda pos: pos[0])[-1][0] + 500
         }
-        
+
+        #ATH
+        self.update_piece = update_piece
+        self.piece = 0
         
         #chose additionnel
         self.particule_surfs = asset_dict['particle']
@@ -48,6 +53,7 @@ class Level:
         self.hit_sound.set_volume(0.3)
         
     def build_level(self, grid, asset_dict, jump_sound):
+        
             for layer_name, couche in grid.items():
               for pos, data in couche.items():
                     if layer_name == 'terrain':
@@ -97,12 +103,18 @@ class Level:
                         case 14: Animated(asset_dict['arbre']['Animation_Arbre3bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
             for sprite in self.ennemie_sprites:
                 sprite.player = self.player
-                     
+
+    def update_piece(self,nombre):
+        self.piece += nombre       
+
     def get_coins(self) :
-        collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)      
-        for sprite in collided_coins:
-            self.coin_sound.play()
-            Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
+        collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)    
+        if collided_coins:  
+            for sprite in collided_coins:
+                self.coin_sound.play()
+                Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
+                self.update_piece(1)
+                self.ath.nombre_piece(self.piece)
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
