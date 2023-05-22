@@ -21,7 +21,6 @@ class Main:
         #definition de la partie qui gere la vie et le nombre de piece
         self.vie_max = 100
         self.vie_actuelle = 100
-        self.piece = 0
 
         #ath
         self.ath = ATH(self.display_surface)
@@ -115,7 +114,6 @@ class Main:
             else:
                 self.level.lancement(dt)
                 self.ath.barre_de_vie(self.vie_actuelle,self.vie_max)
-                self.ath.nombre_piece(self.piece)
                 
             self.transition.display(dt)
         
