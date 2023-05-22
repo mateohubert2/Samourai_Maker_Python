@@ -24,7 +24,7 @@ class Main:
 
         #ath
         self.ath = ATH(self.display_surface)
-
+        self.piece = 0
         self.editeur_active = True
         self.transition = Transition(self.toggle)
         self.editeur = Editeur(self.cases_terrain, self.switch)
@@ -114,6 +114,7 @@ class Main:
             else:
                 self.level.lancement(dt)
                 self.ath.barre_de_vie(self.vie_actuelle,self.vie_max)
+                #self.ath.nombre_piece(self.piece)
                 
             self.transition.display(dt)
         

@@ -1,20 +1,18 @@
 import pygame, sys
 from pygame.math import Vector2 as vector
-
+from ATH import ATH
 from parametres import*
 from support import*
 from random import choice
 from random import randint
-from main import Main
-from ATH import *
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
 
 class Level:
-    def __init__(self, grid, switch, asset_dict, audio, update_piece):
+    def __init__(self, grid, switch, asset_dict, audio):
         self.display_surface = pygame.display.get_surface()
         self.switch = switch
-        
+        self.ath = ATH(self.display_surface)
         #groups
         self.all_sprites = CameraGroup()
         self.coin_sprites = pygame.sprite.Group()
@@ -31,7 +29,7 @@ class Level:
         }
 
         #ATH
-        self.update_piece = update_piece
+        #self.update_pieces = update_piece
         self.piece = 0
         
         #chose additionnel
@@ -114,7 +112,6 @@ class Level:
                 self.coin_sound.play()
                 Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
                 self.update_piece(1)
-                self.ath.nombre_piece(self.piece)
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
@@ -150,9 +147,10 @@ class Level:
         self.all_sprites.update(dt)
         self.get_coins()
         self.get_damage()
-        
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
+        self.ath.nombre_piece(self.piece)
+        self.player.run_dust_animation(dt)
         
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
