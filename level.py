@@ -141,7 +141,10 @@ class Level:
             x = randint(self.level_limits['left'],self.level_limits['right'])
             y = self.horizon_y - randint(-50, 600)
             Cloud((x,y), surf, self.all_sprites, self.level_limits['left'])
-                
+    
+    
+
+            
     def lancement(self, dt):
         self.boucle_evenement()
         self.all_sprites.update(dt)
@@ -150,7 +153,7 @@ class Level:
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
         self.ath.nombre_piece(self.piece)
-        self.player.run_dust_animation(dt)
+        #Particule.run_dust_animation(dt)
         
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -174,9 +177,8 @@ class CameraGroup(pygame.sprite.Group):
             
             if horizon_pos < 0:
                 self.display_surface.fill(COULEUR_MER)
-
             
-        
+    
     def custom_draw(self, player):
         self.offset.x = player.rect.centerx - LARGEUR_FENETRE / 2
         self.offset.y = player.rect.centery - HAUTEUR_FENETRE / 2
@@ -195,3 +197,5 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
+    
+    

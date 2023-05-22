@@ -54,6 +54,9 @@ class Particule(Animated):
     def __init__(self, assets, pos, group):
         super().__init__(assets, pos, group)            
         self.rect = self.image.get_rect(center = pos)
+        self.import_dust_particule()
+        self.dust_frame_index = 0
+        self.dust_animation_speed = 0.15
         
     def animate(self, dt):
         self.frame_index += VITESSE_ANIMATION * dt
@@ -61,6 +64,22 @@ class Particule(Animated):
             self.image = self.animation_frames[int(self.frame_index)]
         else:
             self.kill()
+    
+    def import_dust_particule(self):
+        self.dust_run_particules = import_folder('Graphique/Particule/dust_particles/run')
+    
+    def run_dust_animation(self, dt):
+        keys =  pygame.key.get_pressed()
+        if (keys[pygame.K_d] or keys[pygame.K_q]) and self.player.on_floor:
+            self.dust_frame_index += VITESSE_ANIMATION * dt
+            if self.dust_frame_index >= len(self.dust_run_particules):
+                self.dust_frame_index = 0
+                
+            dust_particule = self.dust_run_particules[int(self.dust_frame_index)]
+            
+            if self.player.orientation == 'right':
+                pos = self.rect.bottomleft
+                self.display_surface.blit(dust_particule, pos)
         
 class Coin(Animated):
     def __init__(self, coin_type, assets, pos, group):
@@ -192,9 +211,6 @@ class Player(Generic):
         self.animation_frames = assets
         self.frame_index = 0
         #nouvellefonction
-        self.import_dust_particule()
-        self.dust_frame_index = 0
-        self.dust_animation_speed = 0.15
         self.display_surface = surface
         self.status = 'idle'
         self.orientation = 'right'
@@ -222,7 +238,8 @@ class Player(Generic):
         if not self.invul_timer.active:
             self.invul_timer.activate()
             self.direction.y -= 1.5
-        
+    
+    
     def get_status(self):
         if self.direction.y < 0:
             self.status = 'jump'
@@ -230,7 +247,7 @@ class Player(Generic):
             self.status = 'fall'
         else:
            self.status = 'run' if self.direction.x != 0 else 'idle'
-            
+    
     def animate(self, dt):
         current_animation = self.animation_frames[f'{self.status}_{self.orientation}']
         self.frame_index += VITESSE_ANIMATION * dt / 2
@@ -294,20 +311,6 @@ class Player(Generic):
                     self.pos.y = self.hitbox.centery
                     self.direction.y = 0
     #nouvellefonction
-    def import_dust_particule(self):
-        self.dust_run_particule = import_folder('Graphique/Particule/dust_particles/run')
-    
-    def run_dust_animation(self, dt):
-        #keys =  pygame.key.get_pressed()
-        #if (keys[pygame.K_d] or keys[pygame.K_q]) and self.on_floor:
-        self.dust_frame_index += VITESSE_ANIMATION * dt
-        if self.dust_frame_index >= len(self.dust_run_particule):
-            self.dust_frame_index = 0
-        dust_particule = self.dust_run_particule[int(self.dust_frame_index)]
-            
-        #if self.orientation == 'right':
-        pos = self.rect.bottomleft
-        self.display_surface.blit(dust_particule, pos)
     
     def update(self, dt):
         self.input()
@@ -318,4 +321,3 @@ class Player(Generic):
         
         self.get_status()
         self.animate(dt)
-        self.run_dust_animation(dt)
