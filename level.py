@@ -5,11 +5,12 @@ from parametres import*
 from support import*
 from random import choice
 from random import randint
+from main import Main
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
 
 class Level:
-    def __init__(self, grid, switch, asset_dict, audio):
+    def __init__(self, grid, switch, asset_dict, audio, update_piece):
         self.display_surface = pygame.display.get_surface()
         self.switch = switch
         self.ath = ATH(self.display_surface)
@@ -29,7 +30,7 @@ class Level:
         }
 
         #ATH
-        #self.update_pieces = update_piece
+        self.update_piece = update_piece
         self.piece = 0
         
         #chose additionnel
@@ -68,9 +69,9 @@ class Level:
                             self.horizon_y = pos[1]
                             self.all_sprites.horizon_y = pos[1]
                         
-                        case 4: Coin('gold', asset_dict['gold'], pos, [self.all_sprites, self.coin_sprites])
-                        case 5: Coin('silver', asset_dict['silver'], pos, [self.all_sprites, self.coin_sprites])
-                        case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites])
+                        case 4: Coin('gold', asset_dict['gold'], pos, [self.all_sprites, self.coin_sprites],5)
+                        case 5: Coin('silver', asset_dict['silver'], pos, [self.all_sprites, self.coin_sprites],1)
+                        case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites],10)
                         
                         case 7:
                             Ennemie(orientation = 'left', 
@@ -111,7 +112,8 @@ class Level:
             for sprite in collided_coins:
                 self.coin_sound.play()
                 Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
-                self.update_piece(1)
+                self.update_piece(self.valeur)
+                self.ath.nombre_piece(self.piece)
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
@@ -141,18 +143,15 @@ class Level:
             x = randint(self.level_limits['left'],self.level_limits['right'])
             y = self.horizon_y - randint(-50, 600)
             Cloud((x,y), surf, self.all_sprites, self.level_limits['left'])
-    
-    
-
-            
+                
     def lancement(self, dt):
         self.boucle_evenement()
         self.all_sprites.update(dt)
         self.get_coins()
         self.get_damage()
+        
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
-        self.ath.nombre_piece(self.piece)
         
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -176,8 +175,9 @@ class CameraGroup(pygame.sprite.Group):
             
             if horizon_pos < 0:
                 self.display_surface.fill(COULEUR_MER)
+
             
-    
+        
     def custom_draw(self, player):
         self.offset.x = player.rect.centerx - LARGEUR_FENETRE / 2
         self.offset.y = player.rect.centery - HAUTEUR_FENETRE / 2
@@ -196,5 +196,3 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
-    
-    
