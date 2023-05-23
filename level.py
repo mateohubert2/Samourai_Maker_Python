@@ -153,7 +153,6 @@ class Level:
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
         self.ath.nombre_piece(self.piece)
-        #Particule.run_dust_animation(dt)
         
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
