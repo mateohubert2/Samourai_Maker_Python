@@ -7,6 +7,7 @@ from timer import Timer
 from random import randint
 from random import choice
 from support import import_folder
+from level import *
 #from main import dt
 
 
@@ -63,11 +64,11 @@ class Particule(Animated):
             self.kill()
         
 class Coin(Animated):
-    def __init__(self, coin_type, assets, pos, group):
+    def __init__(self, coin_type, assets, pos, group,valeur):
         super().__init__(assets, pos, group)
         self.rect = self.image.get_rect(center = pos)
         self.coin_type = coin_type 
-        
+        self.valeur = valeur
 class Ennemie2(Generic):
     def __init__(self, assets, pos, group, collision_sprites):
 
