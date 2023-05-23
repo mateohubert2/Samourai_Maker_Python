@@ -6,6 +6,7 @@ from support import*
 from random import choice
 from random import randint
 
+
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
 
 class Level:
@@ -48,7 +49,13 @@ class Level:
         
         self.hit_sound = audio['hit']
         self.hit_sound.set_volume(0.3)
-        
+    
+    def differencier_piece(self, grid):
+        if grid.items()['gold']:
+            valeur = 5
+            self.update_piece(valeur)
+            self.ath.nombre_piece(self.piece)
+    
     def build_level(self, grid, asset_dict, jump_sound):
         
             for layer_name, couche in grid.items():
@@ -110,8 +117,7 @@ class Level:
             for sprite in collided_coins:
                 self.coin_sound.play()
                 Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
-                self.update_piece(self.valeur)
-                self.ath.nombre_piece(self.piece)
+
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
