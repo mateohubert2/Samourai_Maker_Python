@@ -1,16 +1,17 @@
 import pygame, sys
 from pygame.math import Vector2 as vector
-from ATH import ATH
+
 from parametres import*
 from support import*
 from random import choice
 from random import randint
-from main import Main
+from ATH import ATH
+from sprites import *
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
 
 class Level:
-    def __init__(self, grid, switch, asset_dict, audio, update_piece):
+    def __init__(self, grid, switch, asset_dict, audio):
         self.display_surface = pygame.display.get_surface()
         self.switch = switch
         self.ath = ATH(self.display_surface)
@@ -30,7 +31,6 @@ class Level:
         }
 
         #ATH
-        self.update_piece = update_piece
         self.piece = 0
         
         #chose additionnel
@@ -112,7 +112,7 @@ class Level:
             for sprite in collided_coins:
                 self.coin_sound.play()
                 Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
-                self.update_piece(self.valeur)
+                self.update_piece(5)
                 self.ath.nombre_piece(self.piece)
     
     def get_damage(self):
