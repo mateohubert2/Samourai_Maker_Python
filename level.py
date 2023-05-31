@@ -1,11 +1,10 @@
 import pygame, sys
 from pygame.math import Vector2 as vector
-
+from ATH import ATH
 from parametres import*
 from support import*
 from random import choice
 from random import randint
-from main import Main
 
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
@@ -110,10 +109,10 @@ class Level:
                 sprite.player = self.player
 
     def update_piece(self,nombre):
-        self.piece += nombre      
+        self.piece += nombre       
 
     def get_coins(self) :
-        collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)
+        collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)    
         if collided_coins:  
             for sprite in collided_coins:
                 self.coin_sound.play()
@@ -163,6 +162,7 @@ class Level:
         self.all_sprites.update(dt)
         self.get_coins()
         self.get_damage()
+        
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
         self.ath.nombre_piece(self.piece)
