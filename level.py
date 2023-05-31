@@ -109,14 +109,23 @@ class Level:
                 sprite.player = self.player
 
     def update_piece(self,nombre):
-        self.piece += nombre       
+        self.piece += nombre      
 
     def get_coins(self) :
-        collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)    
+        collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)
         if collided_coins:  
             for sprite in collided_coins:
                 self.coin_sound.play()
                 Particule(self.particule_surfs, sprite.rect.center, self.all_sprites)
+                if  sprite.coin_type == 'gold':
+                    valeur = 5
+                    self.update_piece(valeur)
+                if  sprite.coin_type == 'silver':
+                    valeur = 1
+                    self.update_piece(valeur)
+                if  sprite.coin_type == 'diamond':
+                    valeur = 10
+                    self.update_piece(valeur)
 
     
     def get_damage(self):
@@ -153,9 +162,9 @@ class Level:
         self.all_sprites.update(dt)
         self.get_coins()
         self.get_damage()
-        
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
+        self.ath.nombre_piece(self.piece)
         
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
