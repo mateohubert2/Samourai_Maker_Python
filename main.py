@@ -21,7 +21,6 @@ class Main:
         #definition de la partie qui gere la vie et le nombre de piece
         self.vie_max = 100
         self.vie_actuelle = 100
-
         #ath
         self.ath = ATH(self.display_surface)
         self.piece = 0
