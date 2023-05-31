@@ -215,11 +215,13 @@ class Player(Generic):
         self.hitbox = self.rect.inflate(-16,-14)
         
         self.invul_timer = Timer(200)
+        self.invul_timer1 = Timer(900)
         
         self.jump_sound = jump_sound
         self.jump_sound.set_volume(0.2)
     def damage(self):
         if not self.invul_timer.active:
+            self.invul_timer1.activate()
             self.invul_timer.activate()
             self.direction.y -= 1.5
     

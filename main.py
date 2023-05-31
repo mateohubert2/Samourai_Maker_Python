@@ -113,7 +113,6 @@ class Main:
             else:
                 self.level.lancement(dt)
                 self.ath.barre_de_vie(self.vie_actuelle,self.vie_max)
-                #self.ath.nombre_piece(self.piece)
                 
             self.transition.display(dt)
         

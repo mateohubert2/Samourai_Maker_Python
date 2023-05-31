@@ -5,6 +5,7 @@ from parametres import*
 from support import*
 from random import choice
 from random import randint
+from timer import Timer
 
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
@@ -22,6 +23,7 @@ class Level:
         self.ennemie_sprites = pygame.sprite.Group()
         
         self.build_level(grid, asset_dict, audio['jump'])
+        self.enemy_timer = Timer(1000)
         
         #limite du lvl
         self.level_limits = {
@@ -49,12 +51,6 @@ class Level:
         
         self.hit_sound = audio['hit']
         self.hit_sound.set_volume(0.3)
-    
-    def differencier_piece(self, grid):
-        if grid.items()['gold']:
-            valeur = 5
-            self.update_piece(valeur)
-            self.ath.nombre_piece(self.piece)
     
     def build_level(self, grid, asset_dict, jump_sound):
         
@@ -127,6 +123,18 @@ class Level:
                     valeur = 10
                     self.update_piece(valeur)
 
+    def check_enemy_collision(self):
+        enemy_collision = pygame.sprite.spritecollide(self.player,self.damage_sprites, False)
+        #for sprite in enemy_collision:
+        if enemy_collision:
+            #if sprite.assets == 'ennemie2':
+            for ennemie in enemy_collision:
+                enemy_centre = ennemie.rect.centery
+                enemy_top = ennemie.rect.top
+                player_bottom = self.player.rect.bottom
+                if enemy_top<player_bottom<enemy_centre and self.player.direction.y>=0:
+                    ennemie.kill()
+            
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
@@ -161,6 +169,7 @@ class Level:
         self.boucle_evenement()
         self.all_sprites.update(dt)
         self.get_coins()
+        self.check_enemy_collision()
         self.get_damage()
         
         self.display_surface.fill(COULEUR_CIEL)
