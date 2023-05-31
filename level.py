@@ -5,7 +5,6 @@ from parametres import*
 from support import*
 from random import choice
 from random import randint
-from main import Main
 
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
