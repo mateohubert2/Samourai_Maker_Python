@@ -8,7 +8,6 @@ from random import randint
 from random import choice
 from support import import_folder
 from level import *
-#from main import dt
 
 
 class Generic(pygame.sprite.Sprite):
@@ -219,6 +218,7 @@ class Player(Generic):
         
         self.jump_sound = jump_sound
         self.jump_sound.set_volume(0.2)
+
     def damage(self):
         if not self.invul_timer.active:
             self.invul_timer1.activate()

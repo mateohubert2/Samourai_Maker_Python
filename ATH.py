@@ -29,6 +29,7 @@ class ATH:
         vie_actuelle_longueur = self.longeur_max_barre * vie_actuelle_ratio
         barre_vie_rect = pygame.Rect(self.barre_vie_topleft,( vie_actuelle_longueur,self.hauteur_barre))
         pygame.draw.rect(self.display_surface,'#dc4949',barre_vie_rect)
+        
     def nombre_piece(self, nombre):
         """_summary_
         le but de cette fonction est d'afficher le nombre de piece et une piece à coté
