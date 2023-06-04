@@ -1,10 +1,12 @@
 import pygame
+from tiles import Tile
 from support import import_csv_layout
 from parametres import TAILLE_CASES
 
 class Niveau:
     def __init__(self,level_data,surface):
         self.display_surface = surface
+        self.world_shift = 0
         
         terrain_layout = import_csv_layout(level_data['terrain'])
         self.terrain_niveau_sprites = self.create_tile_group(terrain_layout, 'terrain')
@@ -19,11 +21,13 @@ class Niveau:
                     y = row_index * TAILLE_CASES
 
                     if type == 'terrain':
-                        sprite = Tile(tile_size,x,y)
+                        terrain_tile_list = import_cut_graphics('Graphique/Levels/data/terrain.png')
+                        sprite = Tile(TAILLE_CASES,x,y)
                         sprite_group.add(sprite)
                     
         return sprite_group
         
     
     def run(self):
-        pass
+        self.terrain_niveau_sprites.draw(self.display_surface)
+        self.terrain_niveau_sprites.update(self.world_shift)

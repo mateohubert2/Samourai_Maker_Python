@@ -1,7 +1,7 @@
 from typing import Any
 import pygame
 from pygame.math import Vector2 as vector
-from pygame.sprite import _Group
+from pygame.sprite import Group
 from parametres import*
 from parametres import LEVEL_LAYERS
 from timer import Timer

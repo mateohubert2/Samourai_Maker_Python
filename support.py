@@ -1,6 +1,8 @@
 import pygame
 from os import walk
 from csv import reader
+from parametres import TAILLE_CASES
+
 def import_folder(path):
 	surface_list = []
 
@@ -29,3 +31,15 @@ def import_csv_layout(path):
         for row in level:
             terrain_map.append(list(row))
         return terrain_map
+    
+def import_cut_graphics(path):
+    surface = pygame.image.load(path).convert_alpha()
+    tile_num_x = int(surface.get_size()[0] / TAILLE_CASES)
+    tile_num_y = int(surface.get_size()[1] / TAILLE_CASES)
+    
+    for row in range(tile_num_y):
+        for col in range(tile_num_x):
+            x = col * TAILLE_CASES
+            y = row * TAILLE_CASES
+            new_surface = pygame.Surface((TAILLE_CASES, TAILLE_CASES))
+            new_surface.blit(surface)
