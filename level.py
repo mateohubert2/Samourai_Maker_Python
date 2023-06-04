@@ -6,6 +6,7 @@ from support import*
 from random import choice
 from random import randint
 from timer import Timer
+from sprites import *
 
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
@@ -21,6 +22,7 @@ class Level:
         self.damage_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
         self.ennemie_sprites = pygame.sprite.Group()
+        self.explosion_sprites = pygame.sprite.Group()
         
         self.build_level(grid, asset_dict, audio['jump'])
         self.enemy_timer = Timer(1000)
@@ -125,16 +127,17 @@ class Level:
 
     def check_enemy_collision(self):
         enemy_collision = pygame.sprite.spritecollide(self.player,self.damage_sprites, False)
-        #for sprite in enemy_collision:
         if enemy_collision:
-            #if sprite.assets == 'ennemie2':
             for ennemie in enemy_collision:
                 enemy_centre = ennemie.rect.centery
                 enemy_top = ennemie.rect.top
                 player_bottom = self.player.rect.bottom
                 if enemy_top<player_bottom<enemy_centre and self.player.direction.y>=0:
-                    ennemie.kill()
-            
+                    #effet de knockback quand on tue un enemie ou une perle
+                    self.player.direction.y = -2
+                    explosion_sprite = Particule_enemy(ennemie.rect.center,'explosion')
+                    self.explosion_sprites.add(explosion_sprite)
+                    ennemie.kill()        
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
@@ -171,6 +174,8 @@ class Level:
         self.get_coins()
         self.check_enemy_collision()
         self.get_damage()
+        self.explosion_sprites.update(dt)
+        self.explosion_sprites.draw(self.display_surface)
         
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
