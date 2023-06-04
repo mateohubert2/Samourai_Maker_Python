@@ -8,6 +8,8 @@ from level import Level
 from ATH import ATH
 from os import walk
 from pygame.mouse import get_pos as position_souris
+from niveau import Niveau
+from game_data import level_0
 
 class Main:
     #instantiation de la classe
@@ -125,6 +127,7 @@ class Main:
         definition des conditions de lancement de l'editeur ou du niveau
         +lancement de l'editeur au début 
         """
+        niveau = Niveau(level_0, self.display_surface)
         while True:
         #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
@@ -132,7 +135,8 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-            self.display_surface.fill('red')
+            self.display_surface.fill('black')
+            niveau.run()
             
             pygame.display.update()
     
