@@ -6,7 +6,8 @@ from support import*
 from random import choice
 from random import randint
 from timer import Timer
-from sprites import *
+from sprites import Particule_enemy
+from niveau import *
 
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
@@ -135,8 +136,9 @@ class Level:
                 if enemy_top<player_bottom<enemy_centre and self.player.direction.y>=0:
                     #effet de knockback quand on tue un enemie ou une perle
                     self.player.direction.y = -2
-                    explosion_sprite = Particule_enemy(enemy_centre,'explosion')
-                    self.explosion_sprites.add(explosion_sprite)
+                    #marche pas
+                    #explosion_sprite = Particule_enemy(enemy_centre,'explosion')
+                    #self.explosion_sprites.add(explosion_sprite)
                     ennemie.kill()        
     
     def get_damage(self):
@@ -174,8 +176,8 @@ class Level:
         self.get_coins()
         self.check_enemy_collision()
         self.get_damage()
-        self.explosion_sprites.update(dt)
-        self.explosion_sprites.draw(self.display_surface)
+        #self.explosion_sprites.update(dt)
+        #self.explosion_sprites.draw(self.display_surface)
         
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
