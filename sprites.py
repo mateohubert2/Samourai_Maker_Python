@@ -314,6 +314,7 @@ class Particule_enemy(pygame.sprite.Sprite):
         self.frame_index = 0
         self.animation_speed = VITESSE_ANIMATION
         if type == 'explosion':
-            self.frames = self.import_folder('Graphique/Ennemie/explosion')
-        self.image = self.frame[self.frame_index]
+            self.frames = import_folder('Graphique/Ennemie/explosion')
+        self.image = self.frames[self.frame_index]
+        #marche pas
         self.rect = self.image.get_rect(center = pos)
