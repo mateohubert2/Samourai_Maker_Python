@@ -7,6 +7,7 @@ from editeur import Editeur
 from level import Level
 from ATH import ATH
 from os import walk
+from pygame.mouse import get_pos as position_souris
 
 class Main:
     #instantiation de la classe
@@ -15,6 +16,8 @@ class Main:
         instancie les variables necessaires dans la classe main
         """ 
         pygame.init()
+        self.selection = 0
+        self.i = 0
         self.display_surface = pygame.display.set_mode((LARGEUR_FENETRE, HAUTEUR_FENETRE))
         self.clock = pygame.time.Clock()
         self.imports()
@@ -104,19 +107,75 @@ class Main:
         +lancement de l'editeur au début 
         """
         while True:
-            #changer le nom de la fênetre de jeu
+        #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
             dt = self.clock.tick() / 850
-                    
             if self.editeur_active:
                 self.editeur.lancement(dt)
             else:
                 self.level.lancement(dt)
                 self.ath.barre_de_vie(self.vie_actuelle,self.vie_max)
-                
+                                
             self.transition.display(dt)
-        
+                        
             pygame.display.update()
+            
+    def lancement1(self):
+        """_summary_
+        definition des conditions de lancement de l'editeur ou du niveau
+        +lancement de l'editeur au début 
+        """
+        while True:
+        #changer le nom de la fênetre de jeu
+            pygame.display.set_caption('Samourai Maker par Matéo et Evan')
+            dt = self.clock.tick() / 850
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            self.display_surface.fill('red')
+            
+            pygame.display.update()
+    
+    def lancement2(self):
+        """_summary_
+        definition des conditions de lancement de l'editeur ou du niveau
+        +lancement de l'editeur au début 
+        """
+        while True:
+        #changer le nom de la fênetre de jeu
+            pygame.display.set_caption('Samourai Maker par Matéo et Evan')
+            dt = self.clock.tick() / 850
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            self.display_surface.fill('blue')
+            self.image1 = pygame.image.load('Graphique/Levels/Menu/arbrefond.png').convert_alpha()
+            self.image1 = pygame.transform.scale2x(self.image1)
+            self.display_surface.blit(self.image1, (0,0))
+            self.rect = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(LARGEUR_FENETRE - 532, ((HAUTEUR_FENETRE/2)+20), 288, 180))
+            self.rect1 = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(LARGEUR_FENETRE - 1062, ((HAUTEUR_FENETRE/2)+20), 288, 180))
+            self.image = pygame.image.load('Graphique/Levels/Menu/level.png').convert_alpha()
+            self.image = pygame.transform.scale2x(self.image)
+            self.display_surface.blit(self.image, [200, (HAUTEUR_FENETRE/2)])
+            self.imagex = pygame.image.load('Graphique/Levels/Menu/fond.png').convert_alpha()
+            self.display_surface.blit(self.imagex, [150, 30])
+            self.image_text = pygame.image.load('Graphique/Levels/Menu/edit.png').convert_alpha()
+            self.image_text = pygame.transform.scale2x(self.image_text)
+            self.display_surface.blit(self.image_text, [LARGEUR_FENETRE - 550, (HAUTEUR_FENETRE/2)])
+            police = pygame.font.SysFont("monospace",100)
+            text = police.render(("Samourai Maker"), 1 , (255,0,0))
+            self.display_surface.blit(text, (210,50))
+            police1 = pygame.font.SysFont("monospace",40)
+            text1 = police1.render(("HUBERT Matéo, HELLE Evan"), 1 , (255,0,0))
+            self.display_surface.blit(text1, (350,150))
+            
+            pygame.display.update()
+            if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(position_souris()):
+                main = Main()
+                main.lancement()
+            if event.type == pygame.MOUSEBUTTONDOWN and self.rect1.collidepoint(position_souris()):
+                main1 = Main()
+                main1.lancement1()
 
 class Transition:
     def __init__(self, toggle):
@@ -151,5 +210,5 @@ class Transition:
             
 #obligation de lancer le programme dans le main sinon ça ne va pas marcher
 if __name__ == '__main__':
-    main = Main()
-    main.lancement()
+    main2 = Main()
+    main2.lancement2()

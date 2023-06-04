@@ -4,6 +4,9 @@ LARGEUR_FENETRE = 1280
 HAUTEUR_FENETRE = 720
 VITESSE_ANIMATION = 8
 COULEUR_LIGNE = 'black'
+CASES_VERTICALE = 11
+screen_height = CASES_VERTICALE * TAILLE_CASES
+screen_width = 1280
 
 EDITOR_DATA = {
     0: {'style': 'personnage', 'type': 'object', 'menu': None, 'menu_surf': None, 'preview': None, 'graphics': 'Graphique/Personnage/Animation_Personnage/Preview'},    
