@@ -135,7 +135,7 @@ class Level:
                 if enemy_top<player_bottom<enemy_centre and self.player.direction.y>=0:
                     #effet de knockback quand on tue un enemie ou une perle
                     self.player.direction.y = -2
-                    explosion_sprite = Particule_enemy(ennemie.rect.center,'explosion')
+                    explosion_sprite = Particule_enemy(enemy_centre,'explosion')
                     self.explosion_sprites.add(explosion_sprite)
                     ennemie.kill()        
     
