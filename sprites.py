@@ -1,6 +1,7 @@
 from typing import Any
 import pygame
 from pygame.math import Vector2 as vector
+from pygame.sprite import _Group
 from parametres import*
 from parametres import LEVEL_LAYERS
 from timer import Timer
@@ -200,7 +201,7 @@ class Player(Generic):
         super().__init__(pos, surf, group)
         self.mask = pygame.mask.from_surface(self.image)
         self.dust_frame_index = 0
-        self.dust_animation_speed = 0.15
+        self.dust_animation_speed = 0
         
         #mouvement
         self.direction = vector()
@@ -306,3 +307,13 @@ class Player(Generic):
         
         self.get_status()
         self.animate(dt)
+
+class Particule_enemy(pygame.sprite.Sprite):
+    def __init__(self, pos, type):
+        super().__init__()
+        self.frame_index = 0
+        self.animation_speed = VITESSE_ANIMATION
+        if type == 'explosion':
+            self.frames = self.import_folder('Graphique/Ennemie/explosion')
+        self.image = self.frame[self.frame_index]
+        self.rect = self.image.get_rect(center = pos)
