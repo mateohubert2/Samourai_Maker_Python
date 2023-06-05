@@ -137,8 +137,8 @@ class Level:
                     #effet de knockback quand on tue un enemie ou une perle
                     self.player.direction.y = -2
                     #marche pas
-                    #explosion_sprite = Particule_enemy(enemy_centre,'explosion')
-                    #self.explosion_sprites.add(explosion_sprite)
+                    explosion_sprite = Particule_enemy(ennemie.rect.center,'explosion')
+                    self.explosion_sprites.add(explosion_sprite)
                     ennemie.kill()        
     
     def get_damage(self):
@@ -176,11 +176,14 @@ class Level:
         self.get_coins()
         self.check_enemy_collision()
         self.get_damage()
-        #self.explosion_sprites.update(dt)
-        #self.explosion_sprites.draw(self.display_surface)
+        
+    
         
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
+        self.explosion_sprites.draw(self.display_surface)
+        self.explosion_sprites.update(dt)
+
         self.ath.nombre_piece(self.piece)
         
 class CameraGroup(pygame.sprite.Group):

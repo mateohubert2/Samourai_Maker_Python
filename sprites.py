@@ -312,9 +312,30 @@ class Particule_enemy(pygame.sprite.Sprite):
     def __init__(self, pos, type):
         super().__init__()
         self.frame_index = 0
-        self.animation_speed = VITESSE_ANIMATION
+        self.animation_speed = 0.3
         if type == 'explosion':
             self.frames = import_folder('Graphique/Ennemie/explosion')
+        else:
+            pass
         self.image = self.frames[self.frame_index]
         #marche pas
         self.rect = self.image.get_rect(center = pos)
+    
+    def animate(self):
+        """_summary_
+        fais touner les images de l'explosion pour faire l'animation
+        """
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(self.frames):
+            self.kill()
+        else:
+            self.image = self.frames[int(self.frame_index)]
+
+    def update(self,x_shift):
+        """_summary_
+        met à jour l'animation vu plus haut
+        Args:
+            x_shift (_type_): _description_
+        """
+        self.animate()
+        self.rect.x += x_shift
