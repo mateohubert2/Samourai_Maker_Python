@@ -239,6 +239,7 @@ class Player(Generic):
             self.invul_timer.activate()
             self.direction.y -= 1.5
     
+    
     def get_status(self):
         if self.direction.y < 0:
             self.status = 'jump'
