@@ -24,10 +24,10 @@ class Level:
         self.collision_sprites = pygame.sprite.Group()
         self.ennemie_sprites = pygame.sprite.Group()
         self.explosion_sprites = pygame.sprite.Group()
-        
+        self.mort = 0
         self.build_level(grid, asset_dict, audio['jump'])
         self.enemy_timer = Timer(1000)
-        
+        self.animation_timer = Timer(500)
         #limite du lvl
         self.level_limits = {
             'left': -LARGEUR_FENETRE,
@@ -87,7 +87,7 @@ class Level:
                             
                             
                         case 8:
-                            Ennemie2(asset_dict['ennemie2'], pos, [self.all_sprites, self.damage_sprites], self.collision_sprites)
+                            Ennemie2(asset_dict['ennemie2'], pos, [self.all_sprites, self.damage_sprites], self.collision_sprites, self.mort)
                         
                         
                         
@@ -136,10 +136,13 @@ class Level:
                 if enemy_top<player_bottom<enemy_centre and self.player.direction.y>=0:
                     #effet de knockback quand on tue un enemie ou une perle
                     self.player.direction.y = -2
+                    ennemie.mort = 1
+                    self.animation_timer.activate()
+                if not self.animation_timer.active and ennemie.mort == 1:
+                    ennemie.kill()
                     #marche pas
-                    explosion_sprite = Particule_enemy(ennemie.rect.center,'explosion')
-                    self.explosion_sprites.add(explosion_sprite)
-                    ennemie.kill()        
+                    #explosion_sprite = Particule_enemy(ennemie.rect.center,'explosion')
+                    #self.explosion_sprites.add(explosion_sprite)       
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
