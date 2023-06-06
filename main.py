@@ -23,9 +23,6 @@ class Main:
         self.display_surface = pygame.display.set_mode((LARGEUR_FENETRE, HAUTEUR_FENETRE))
         self.clock = pygame.time.Clock()
         self.imports()
-        #definition de la partie qui gere la vie et le nombre de piece
-        self.vie_max = 100
-        self.vie_actuelle = 100
         #ath
         self.ath = ATH(self.display_surface)
         self.piece = 0
@@ -109,14 +106,13 @@ class Main:
         +lancement de l'editeur au début 
         """
         while True:
-        #changer le nom de la fênetre de jeu
+            #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
             dt = self.clock.tick() / 850
             if self.editeur_active:
                 self.editeur.lancement(dt)
             else:
                 self.level.lancement(dt)
-                self.ath.barre_de_vie(self.vie_actuelle,self.vie_max)
                                 
             self.transition.display(dt)
                         

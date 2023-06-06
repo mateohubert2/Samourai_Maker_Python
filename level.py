@@ -36,6 +36,9 @@ class Level:
 
         #ATH
         self.piece = 0
+        #definition de la partie qui gere la vie et le nombre de piece
+        self.vie_max = 100
+        self.vie_actuelle_level = 100
         
         #chose additionnel
         self.particule_surfs = asset_dict['particle']
@@ -68,7 +71,7 @@ class Level:
                             Generic(pos, asset_dict['water bottom'], self.all_sprites, LEVEL_LAYERS['water'])
                     
                     match data:
-                        case 0: self.player = Player(pos, asset_dict['player'] ,self.all_sprites, self.collision_sprites, jump_sound, self.display_surface)
+                        case 0: self.player = Player(pos, asset_dict['player'] ,self.all_sprites, self.collision_sprites, jump_sound, self.display_surface,self.prise_degat)
                         case 1:
                             self.horizon_y = pos[1]
                             self.all_sprites.horizon_y = pos[1]
@@ -108,7 +111,10 @@ class Level:
                 sprite.player = self.player
 
     def update_piece(self,nombre):
-        self.piece += nombre       
+        self.piece += nombre      
+
+    def prise_degat(self, nombre):
+        self.vie_actuelle_level += nombre 
 
     def get_coins(self) :
         collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)    
@@ -127,6 +133,9 @@ class Level:
                     self.update_piece(valeur)
 
     def check_enemy_collision(self):
+        """_summary_
+        permet de tuer un enemie en sautant dessu + rebondir dessus + particule d'explosion
+        """
         enemy_collision = pygame.sprite.spritecollide(self.player,self.damage_sprites, False)
         if enemy_collision:
             for ennemie in enemy_collision:
@@ -135,11 +144,10 @@ class Level:
                 player_bottom = self.player.rect.bottom
                 if enemy_top<player_bottom<enemy_centre and self.player.direction.y>=0:
                     #effet de knockback quand on tue un enemie ou une perle
-                    self.player.direction.y = -2
-                    #marche pas
-                    explosion_sprite = Particule_enemy(ennemie.rect.center,'explosion')
-                    self.explosion_sprites.add(explosion_sprite)
-                    ennemie.kill()        
+                    self.player.direction.y = -2                  
+                    ennemie.kill()
+                else:
+                    self.player.damage()        
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
@@ -181,9 +189,9 @@ class Level:
         
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
-        self.explosion_sprites.draw(self.display_surface)
-        self.explosion_sprites.update(dt)
-
+        #self.explosion_sprites.draw(self.display_surface)
+        #self.explosion_sprites.update(dt)
+        self.ath.barre_de_vie(self.vie_actuelle_level,self.vie_max)
         self.ath.nombre_piece(self.piece)
         
 class CameraGroup(pygame.sprite.Group):

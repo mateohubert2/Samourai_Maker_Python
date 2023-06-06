@@ -189,7 +189,7 @@ class Pearl(Generic):
             self.kill()
     
 class Player(Generic):
-    def __init__(self, pos, assets, group, collision_sprites, jump_sound, surface):
+    def __init__(self, pos, assets, group, collision_sprites, jump_sound, surface,prise_degat):
         
         self.animation_frames = assets
         self.frame_index = 0
@@ -214,17 +214,23 @@ class Player(Generic):
         self.collision_sprites = collision_sprites
         self.hitbox = self.rect.inflate(-16,-14)
         
-        self.invul_timer = Timer(200)
+        self.invul_timer = Timer(500)
         self.invul_timer1 = Timer(900)
         
         self.jump_sound = jump_sound
         self.jump_sound.set_volume(0.2)
 
+        #damage
+        self.prise_degat = prise_degat
+        self.duree_damage = 0
+
     def damage(self):
         if not self.invul_timer.active:
+            self.duree_damage = pygame.time.get_ticks()
             self.invul_timer1.activate()
             self.invul_timer.activate()
-            self.direction.y -= 1.5
+            self.prise_degat(-10)
+            self.direction.y -= 1
     
     def get_status(self):
         if self.direction.y < 0:
@@ -296,8 +302,7 @@ class Player(Generic):
                     self.rect.centery = self.hitbox.centery
                     self.pos.y = self.hitbox.centery
                     self.direction.y = 0
-    #nouvellefonction
-    
+ 
     def update(self, dt):
         self.input()
         self.apply_gravity(dt)
@@ -318,7 +323,6 @@ class Particule_enemy(pygame.sprite.Sprite):
         else:
             pass
         self.image = self.frames[self.frame_index]
-        #marche pas
         self.rect = self.image.get_rect(center = pos)
     
     def animate(self):
