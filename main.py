@@ -135,7 +135,7 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-            self.display_surface.fill('black')
+            self.display_surface.fill('grey')
             niveau.run()
             
             pygame.display.update()

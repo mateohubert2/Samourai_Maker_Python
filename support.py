@@ -53,7 +53,7 @@ def import_cut_graphics(path):
         for col in range(tile_num_x):
             x = col * TAILLE_CASES
             y = row * TAILLE_CASES
-            new_surface = pygame.Surface((TAILLE_CASES, TAILLE_CASES))
+            new_surface = pygame.Surface((TAILLE_CASES, TAILLE_CASES), flags = pygame.SRCALPHA)
             new_surface.blit(surface,(0,0),pygame.Rect(x, y, TAILLE_CASES,TAILLE_CASES))
             cut_tiles.append(new_surface)
             
