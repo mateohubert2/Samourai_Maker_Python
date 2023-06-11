@@ -8,6 +8,8 @@ from random import randint
 from timer import Timer
 from sprites import Particule_enemy
 from niveau import *
+from editeur import *
+from support import *
 
 
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
@@ -142,22 +144,24 @@ class Level:
                 enemy_centre = ennemie.rect.centery
                 enemy_top = ennemie.rect.top
                 player_bottom = self.player.rect.bottom
-                if enemy_top<player_bottom<enemy_centre and self.player.direction.y>=0:
+                if enemy_top<player_bottom<enemy_centre and self.player.direction.y>0:
                     #effet de knockback quand on tue un enemie ou une perle
                     self.player.direction.y = -2
                     ennemie.mort = 1
                     self.animation_timer.activate()
                 if not self.animation_timer.active and ennemie.mort == 1:
-                    ennemie.kill()
-                    #marche pas
-                    #explosion_sprite = Particule_enemy(ennemie.rect.center,'explosion')
-                    #self.explosion_sprites.add(explosion_sprite)       
+                    ennemie.kill()    
     
     def get_damage(self):
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
         if collision_sprites:
             self.hit_sound.play()
             self.player.damage()
+
+    def game_over(self):
+        if self.vie_actuelle_level <=0:
+            self.vie_actuelle_level = 100
+            self.piece = 0
         
     def boucle_evenement(self):
         for event in pygame.event.get():
@@ -183,18 +187,16 @@ class Level:
             Cloud((x,y), surf, self.all_sprites, self.level_limits['left'])
                 
     def lancement(self, dt):
+        #partie ou on regarde les collisions
         self.boucle_evenement()
         self.all_sprites.update(dt)
         self.get_coins()
         self.check_enemy_collision()
         self.get_damage()
-        
-    
-        
+        self.game_over()
+        #partie ou on dessine l'ath
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
-        #self.explosion_sprites.draw(self.display_surface)
-        #self.explosion_sprites.update(dt)
         self.ath.barre_de_vie(self.vie_actuelle_level,self.vie_max)
         self.ath.nombre_piece(self.piece)
         
