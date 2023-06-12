@@ -19,7 +19,7 @@ class Main:
         """ 
         pygame.init()
         self.selection = 0
-        self.i = 0
+        self.i = True
         self.display_surface = pygame.display.set_mode((LARGEUR_FENETRE, HAUTEUR_FENETRE))
         self.clock = pygame.time.Clock()
         self.imports()
@@ -100,11 +100,6 @@ class Main:
                 'clouds': self.clouds},
             self.level_sounds)
     
-    def game_over_main(self):
-        dt = self.clock.tick() / 850
-        if Level.game_over(self):
-            self.editeur.lancement(dt)
-        self.transition.display(dt)
 
     def lancement(self):
         """_summary_
@@ -122,10 +117,9 @@ class Main:
                 if self.level.vie_actuelle_level == 0:
                     self.editeur_active = True
             self.transition.display(dt)
-                        
+                            
             pygame.display.update()
-            self.game_over_main()
-            
+        
     def lancement1(self):
         """_summary_
         definition des conditions de lancement de l'editeur ou du niveau

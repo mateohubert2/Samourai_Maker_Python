@@ -158,11 +158,6 @@ class Level:
             self.hit_sound.play()
             self.player.damage()
 
-    def game_over(self):
-        if self.vie_actuelle_level <=0:
-            self.vie_actuelle_level = 100
-            self.piece = 0
-        
     def boucle_evenement(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -193,7 +188,6 @@ class Level:
         self.get_coins()
         self.check_enemy_collision()
         self.get_damage()
-        self.game_over()
         #partie ou on dessine l'ath
         self.display_surface.fill(COULEUR_CIEL)
         self.all_sprites.custom_draw(self.player)
