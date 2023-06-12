@@ -4,7 +4,7 @@ from pygame.image import load
 from support import*
 from pygame.math import Vector2 as vector
 from editeur import Editeur
-from level import Level
+from level import*
 from ATH import ATH
 from os import walk
 from pygame.mouse import get_pos as position_souris
@@ -114,7 +114,8 @@ class Main:
                 self.editeur.lancement(dt)
             else:
                 self.level.lancement(dt)
-                                
+                if self.level.vie_actuelle_level == 0:
+                    self.editeur_active = True
             self.transition.display(dt)
                         
             pygame.display.update()
