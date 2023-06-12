@@ -7,7 +7,7 @@ from ennemie import Ennemie_lvl, Ennemie_lvl2
 class Niveau:
     def __init__(self,level_data,surface):
         self.display_surface = surface
-        self.world_shift = 0
+        self.world_shift = -1
         
         player_layout = import_csv_layout(level_data['player'])
         self.player = pygame.sprite.GroupSingle()
@@ -105,6 +105,8 @@ class Niveau:
                 ennemie.reverse()
     
     def run(self):
+        self.event = pygame.event.get()
+        
         self.arbre_bg_sprites.update(self.world_shift)
         self.arbre_bg_sprites.draw(self.display_surface)
         
