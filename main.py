@@ -99,12 +99,7 @@ class Main:
                 'pearl': self.pearl,
                 'clouds': self.clouds},
             self.level_sounds)
-    
-    def game_over_main(self):
-        dt = self.clock.tick() / 850
-        if Level.game_over(self):
-            self.editeur.lancement(dt)
-        self.transition.display(dt)
+
 
     def lancement(self):
         """_summary_
@@ -123,7 +118,6 @@ class Main:
             self.transition.display(dt)
                         
             pygame.display.update()
-            self.game_over_main()
             
     def lancement1(self):
         """_summary_
