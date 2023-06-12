@@ -216,7 +216,7 @@ class Editeur:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 self.switch(self.create_grid())
                 self.editor_music.stop()
-                
+            
             self.pan_input(event)
             self.selection_hotkeys(event)
             self.menu_click(event)
