@@ -158,6 +158,8 @@ class Level:
             self.hit_sound.play()
             self.player.damage()
 
+
+        
     def boucle_evenement(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

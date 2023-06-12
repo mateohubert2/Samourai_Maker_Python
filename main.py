@@ -99,7 +99,6 @@ class Main:
                 'pearl': self.pearl,
                 'clouds': self.clouds},
             self.level_sounds)
-    
 
     def lancement(self):
         """_summary_
@@ -119,7 +118,7 @@ class Main:
             self.transition.display(dt)
                             
             pygame.display.update()
-        
+            
     def lancement1(self):
         """_summary_
         definition des conditions de lancement de l'editeur ou du niveau
