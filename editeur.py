@@ -28,7 +28,7 @@ class Editeur:
         self.display_surface = pygame.display.get_surface()
         self.canvas_data = {}
         self.switch = switch
-        
+        self.retour_menu = False
         #importation
         self.cases_terrain = cases_terrain
         self.imports()
@@ -209,6 +209,7 @@ class Editeur:
                     
     def boucle_evenement(self):
         #ferme le jeu
+        self.retour_menu = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(LARGEUR_FENETRE - 147, ((HAUTEUR_FENETRE/2)+143), 103, 27))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -216,7 +217,8 @@ class Editeur:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 self.switch(self.create_grid())
                 self.editor_music.stop()
-            
+            if event.type == pygame.MOUSEBUTTONDOWN and self.retour_menu.collidepoint(position_souris()):
+                self.retour_menu = True
             self.pan_input(event)
             self.selection_hotkeys(event)
             self.menu_click(event)
@@ -460,6 +462,7 @@ class Editeur:
         self.display_surface.blit(self.ligne_de_support_surface,(0,0))
         
     def lancement(self, dt):
+        self.image1 = pygame.image.load('Graphique/game_over/menuditeur.png').convert_alpha()
         self.boucle_evenement()
         #mise a jour
         self.animation_uptade(dt)
@@ -473,6 +476,7 @@ class Editeur:
         #pygame.draw.circle(self.display_surface, 'red', self.origin, 10)
         self.preview()
         self.menu.afficher(self.selection_index)
+        self.display_surface.blit(self.image1, (LARGEUR_FENETRE - 172,((HAUTEUR_FENETRE/2)+130)))
         
 class CanvasTile:
     def __init__(self, tile_id, offset = vector()):

@@ -3,7 +3,7 @@ from parametres import*
 from pygame.image import load
 from support import*
 from pygame.math import Vector2 as vector
-from editeur import Editeur
+from editeur import *
 from level import*
 from ATH import ATH
 from os import walk
@@ -111,6 +111,10 @@ class Main:
             dt = self.clock.tick() / 850
             if self.editeur_active:
                 self.editeur.lancement(dt)
+                if self.editeur.retour_menu == True:
+                    main_retour_menu = Main()
+                    main_retour_menu.lancement2()
+                    self.editeur.retour_menu = False
             else:
                 self.level.lancement(dt)
                 if self.level.vie_actuelle_level == 0:
