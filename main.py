@@ -8,8 +8,8 @@ from level import*
 from ATH import ATH
 from os import walk
 from pygame.mouse import get_pos as position_souris
-from niveau import Niveau
-from game_data import level_0
+from niveau import *
+from game_data import level_0, level_1, level_2
 
 class Main:
     #instantiation de la classe
@@ -23,6 +23,7 @@ class Main:
         self.display_surface = pygame.display.set_mode((LARGEUR_FENETRE, HAUTEUR_FENETRE))
         self.clock = pygame.time.Clock()
         self.imports()
+        self.menu_appuye = False
         #ath
         self.ath = ATH(self.display_surface)
         self.piece = 0
@@ -187,6 +188,44 @@ class Main:
             pygame.display.update()
             
     def lancement1(self):
+        while True:
+            pygame.display.set_caption('Samourai Maker par Matéo et Evan')
+            dt = self.clock.tick() / 850
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN and self.rect1.collidepoint(position_souris()):
+                    mainlvl1 = Main()
+                    mainlvl1.lancement5()
+                    
+                if event.type == pygame.MOUSEBUTTONDOWN and self.rect2.collidepoint(position_souris()):
+                    mainlvl1 = Main()
+                    mainlvl1.lancement3()
+                    
+                if event.type == pygame.MOUSEBUTTONDOWN and self.rect3.collidepoint(position_souris()):
+                    mainlvl1 = Main()
+                    mainlvl1.lancement4()
+        
+            self.display_surface.fill('#ddc6a1')
+            self.image = pygame.image.load('Graphique/Levels/Menu/arbrefond.png').convert_alpha()
+            self.image1 = pygame.image.load('Graphique/Levels/Menu/level1.png').convert_alpha()
+            self.image2 = pygame.image.load('Graphique/Levels/Menu/level2.png').convert_alpha()
+            self.image3 = pygame.image.load('Graphique/Levels/Menu/level3.png').convert_alpha()
+            self.image = pygame.transform.scale2x(self.image)
+            self.image1 = pygame.transform.scale2x(self.image1)
+            self.image2 = pygame.transform.scale2x(self.image2)
+            self.image3 = pygame.transform.scale2x(self.image3)
+            self.rect1 = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(160,120,300,200))
+            self.rect2 = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(460,420,300,200))
+            self.rect3 = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(760,120,300,200))
+            self.display_surface.blit(self.image, (0,0))
+            self.display_surface.blit(self.image1, (150,100))
+            self.display_surface.blit(self.image2, (450,400))
+            self.display_surface.blit(self.image3, (750,100))
+            
+            pygame.display.update()
+    
+    def lancement5(self):
         """_summary_
         lancement du mode de jeu "niveau"
         """
@@ -198,11 +237,53 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN and niveau.retour_menu.collidepoint(position_souris()):
+                    main_retour_menu = Main()
+                    main_retour_menu.lancement2()
             self.display_surface.fill('grey')
             niveau.run()
             
             pygame.display.update()
     
+    def lancement3(self):
+        """_summary_
+        lancement du mode de jeu "niveau"
+        """
+        niveau = Niveau(level_1, self.display_surface)
+        while True:
+        #changer le nom de la fênetre de jeu
+            pygame.display.set_caption('Samourai Maker par Matéo et Evan')
+            dt = self.clock.tick() / 850
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN and niveau.retour_menu.collidepoint(position_souris()):
+                    main_retour_menu = Main()
+                    main_retour_menu.lancement2()
+            self.display_surface.fill('grey')
+            niveau.run()
+            pygame.display.update()
+            
+    def lancement4(self):
+        """_summary_
+        lancement du mode de jeu "niveau"
+        """
+        niveau = Niveau(level_2, self.display_surface)
+        while True:
+        #changer le nom de la fênetre de jeu
+            pygame.display.set_caption('Samourai Maker par Matéo et Evan')
+            dt = self.clock.tick() / 850
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN and niveau.retour_menu.collidepoint(position_souris()):
+                    main_retour_menu = Main()
+                    main_retour_menu.lancement2()
+            self.display_surface.fill('grey')
+            niveau.run()
+            
+            pygame.display.update()
+            
     def lancement2(self):
         """_summary_
         Lancement du menu principal qui se lance dès le début

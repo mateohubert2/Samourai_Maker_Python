@@ -3,12 +3,15 @@ from tiles import Tile, StaticTile, Coin_lvl, Arbre, AnimateTile
 from support import import_csv_layout, import_cut_graphics
 from parametres import TAILLE_CASES
 from ennemie import Ennemie_lvl, Ennemie_lvl2
-
+from parametres import LARGEUR_FENETRE, HAUTEUR_FENETRE
+from timer import Timer
 class Niveau:
     def __init__(self,level_data,surface):
-        self.display_surface = surface
-        self.world_shift = -1
         
+        self.display_surface = surface
+        self.world_shift = 0
+        self.world_shift1 = 0
+
         player_layout = import_csv_layout(level_data['player'])
         self.player = pygame.sprite.GroupSingle()
         self.goal = pygame.sprite.GroupSingle()
@@ -98,34 +101,46 @@ class Niveau:
                     player_surface = pygame.image.load('Graphique/Levels/data/arriver.png').convert_alpha()
                     sprite = StaticTile(TAILLE_CASES,x,y,player_surface)
                     self.goal.add(sprite)
-    
     def ennemie_collisions_reverse(self):
         for ennemie in self.ennemies_sprites.sprites():
             if pygame.sprite.spritecollide(ennemie, self.contrainte_sprites,False):
                 ennemie.reverse()
     
+    def player_mouvement(self):
+        keys =  pygame.key.get_pressed()
+        if keys[pygame.K_d]:
+            self.world_shift = 1
+            self.orientation = 'right'
+        elif keys[pygame.K_q]:
+            self.world_shift = -1
+            self.orientation = 'left'
+        else: self.world_shift = 0
     def run(self):
         self.event = pygame.event.get()
         
-        self.arbre_bg_sprites.update(self.world_shift)
+        self.arbre_bg_sprites.update(self.world_shift1)
         self.arbre_bg_sprites.draw(self.display_surface)
         
-        self.terrain_niveau_sprites.update(self.world_shift)
+        self.terrain_niveau_sprites.update(self.world_shift1)
         self.terrain_niveau_sprites.draw(self.display_surface)
         
-        self.ennemies_sprites.update(self.world_shift)
-        self.contrainte_sprites.update(self.world_shift)
+        self.ennemies_sprites.update(self.world_shift1)
+        self.contrainte_sprites.update(self.world_shift1)
         self.ennemie_collisions_reverse()
         self.ennemies_sprites.draw(self.display_surface)
         
-        self.coin_sprites.update(self.world_shift)
+        self.coin_sprites.update(self.world_shift1)
         self.coin_sprites.draw(self.display_surface)
         
-        self.arbre_fg_sprites.update(self.world_shift)
+        self.arbre_fg_sprites.update(self.world_shift1)
         self.arbre_fg_sprites.draw(self.display_surface)
         
-        self.goal.update(self.world_shift)
+        self.goal.update(self.world_shift1)
         self.goal.draw(self.display_surface)
         
         self.player.update(self.world_shift)
         self.player.draw(self.display_surface)
+        self.imagemenu = pygame.image.load('Graphique/game_over/menuditeur.png').convert_alpha()
+        self.retour_menu = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(LARGEUR_FENETRE - 147, ((HAUTEUR_FENETRE/2)+293), 103, 27))
+        self.display_surface.blit(self.imagemenu, (LARGEUR_FENETRE - 172,((HAUTEUR_FENETRE/2)+280)))
+        self.player_mouvement()
