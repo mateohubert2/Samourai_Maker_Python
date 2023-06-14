@@ -84,6 +84,8 @@ class Editeur:
         self.editor_music = pygame.mixer.Sound('audio/Explorer.ogg')
         self.editor_music.set_volume(0.4)
         self.editor_music.play(loops = -1)
+        self.selection_bruit = pygame.mixer.Sound('audio/Selection.ogg')
+        self.selection_bruit.set_volume(0.4)
         
     def cellule_actuelle(self, obj = None):
         distance_de_origine = vector(position_souris()) - self.origin if not obj else vector(obj.distance_to_origin) - self.origin
@@ -218,6 +220,7 @@ class Editeur:
                 self.switch(self.create_grid())
                 self.editor_music.stop()
             if event.type == pygame.MOUSEBUTTONDOWN and self.retour_menu.collidepoint(position_souris()):
+                self.selection_bruit.play()
                 self.retour_menu = True
             self.pan_input(event)
             self.selection_hotkeys(event)
