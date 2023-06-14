@@ -9,9 +9,10 @@ from timer import Timer
 from sprites import Particule_enemy
 from niveau import *
 from editeur import *
+from editeur import *
 from support import *
-
-
+from pygame.mouse import get_pos as position_souris
+from editeur import vecteur3
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
 
 class Level:
@@ -30,6 +31,8 @@ class Level:
         self.build_level(grid, asset_dict, audio['jump'])
         self.enemy_timer = Timer(1000)
         self.animation_timer = Timer(500)
+        self.offset = self.player.pos
+        self.offset_rect = 0
         #limite du lvl
         self.level_limits = {
             'left': -LARGEUR_FENETRE,
@@ -41,14 +44,15 @@ class Level:
         #definition de la partie qui gere la vie et le nombre de piece
         self.vie_max = 100
         self.vie_actuelle_level = 100
-        
+        self.vecteur = self.editeur.vecteur3
+        print('ici')
+        print(self.vecteur)
         #chose additionnel
         self.particule_surfs = asset_dict['particle']
         self.cloud_timer = pygame.USEREVENT + 2
         self.cloud_surfs = asset_dict['clouds']
         pygame.time.set_timer(self.cloud_timer, 2000)
         self.startup_clouds()
-        
         #musique
         self.bg_music = audio['music']
         self.bg_music.set_volume(0.25)
@@ -184,7 +188,17 @@ class Level:
             x = randint(self.level_limits['left'],self.level_limits['right'])
             y = self.horizon_y - randint(-50, 600)
             Cloud((x,y), surf, self.all_sprites, self.level_limits['left'])
-                
+            
+    def afficher_arriver(self, vecteur3):
+        vector = vecteur3
+        print(vecteur3)
+        x = vector[0]
+        y = vector[1]
+        arriver= pygame.Rect(x,y,64,64)
+        self.offset_rect = arriver.copy()
+        self.offset_rect.center -= self.offset
+        pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, self.offset_rect)
+          
     def lancement(self, dt):
         #partie ou on regarde les collisions
         self.boucle_evenement()
@@ -197,6 +211,8 @@ class Level:
         self.all_sprites.custom_draw(self.player)
         self.ath.barre_de_vie(self.vie_actuelle_level,self.vie_max)
         self.ath.nombre_piece(self.piece)
+        self.afficher_arriver(vecteur3)
+        pygame.draw.rect(self.display_surface, 'blue', self.offset_rect)
         
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -241,3 +257,4 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
+    
