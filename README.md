@@ -25,7 +25,6 @@ Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
  - La direction artistique à été entierment revu.
  - gestion de la valeur de chaque pièce.
  - Gestion de victoire/arrivé une fois que toutes les pièces ont étés récuperées.
- - 
 
 ## Comment jouer:
 
