@@ -242,7 +242,7 @@ class Player(Generic):
             self.duree_damage = pygame.time.get_ticks()
             self.invul_timer1.activate()
             self.invul_timer.activate()
-            self.prise_degat(-10)
+            self.prise_degat(-25)
             self.direction.y -= 1
     
     
