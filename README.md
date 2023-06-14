@@ -24,7 +24,7 @@ Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
  - Ajout de bruit d'ambiance (Game_over, Click dans un menu).
  - La direction artistique à été entierment revu.
  - gestion de la valeur de chaque pièce.
- - Gestion de victoire une fois que toutes les pièces ont étés récuperées.
+ - Gestion de victoire une fois que toutes les pièces ont étés récuperées. Avec un menu(le même que pour le gae over mais legerement modifié)
 
 ## Comment jouer:
 
