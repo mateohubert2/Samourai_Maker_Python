@@ -151,9 +151,39 @@ class Main:
                                 self.level.bg_music.stop()
                                 mainmenu = Main()
                                 mainmenu.lancement2()
-                    self.i = True       
+                    self.i = True
+                if len(self.level.coin_sprites) == 0:
+                    self.level.bg_music.stop()
+                    self.level.Game_Over_music.play()
+                    self.image1 = pygame.image.load('Graphique/game_over/victoire.png').convert_alpha()
+                    self.image1 = pygame.transform.scale2x(self.image1)
+                    self.image2 = pygame.image.load('Graphique/game_over/tryagain.png').convert_alpha()
+                    self.image3 = pygame.image.load('Graphique/game_over/menu.png').convert_alpha()
+                    self.rectover2 = pygame.draw.rect(self.display_surface, 'blue', pygame.Rect(LARGEUR_FENETRE - 1230, ((HAUTEUR_FENETRE/2)+170), 473, 136))
+                    self.rectover = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(LARGEUR_FENETRE - 592, ((HAUTEUR_FENETRE/2)+130), 550, 130))
+                    self.display_surface.fill('#ddc6a1')
+                    self.display_surface.blit(self.image1, (-250,-100))
+                    self.display_surface.blit(self.image2, (LARGEUR_FENETRE - 632, ((HAUTEUR_FENETRE/2)+140)))
+                    self.display_surface.blit(self.image3, (LARGEUR_FENETRE - 1352, ((HAUTEUR_FENETRE/2)+110)))
+                    pygame.display.update()
+                    while self.i == True:
+                        for event in pygame.event.get():
+                            if event.type == pygame.MOUSEBUTTONDOWN and self.rectover.collidepoint(position_souris()):
+                                self.selection_bruit.play()
+                                self.level.bg_music.stop()
+                                self.editeur.editor_music.play(loops = -1)
+                                self.editeur_active = True
+                                self.i = False
+                            if event.type == pygame.QUIT:
+                                pygame.quit()
+                            if event.type == pygame.MOUSEBUTTONDOWN and self.rectover2.collidepoint(position_souris()):
+                                self.selection_bruit.play()
+                                self.editeur.editor_music.stop()
+                                self.level.bg_music.stop()
+                                mainmenu = Main()
+                                mainmenu.lancement2()
+                    self.i = True
             self.transition.display(dt)
-                            
             pygame.display.update()
             
     def lancement1(self):
