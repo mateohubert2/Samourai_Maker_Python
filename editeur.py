@@ -9,7 +9,7 @@ from timer import Timer
 from support import*
 from random import choice, randint
 import sys
-
+vecteur3 = pygame.Vector2(0.0)
 #definition de la classe editeur qui va gérer ce qui se passe dans l'éditeur de niveau
 class Editeur:
     #la fonction __init__ est une fonction spéciale qui permet l'instanciation d'une classe c'est un sorte de constructeur.
@@ -32,7 +32,8 @@ class Editeur:
         #importation
         self.cases_terrain = cases_terrain
         self.imports()
-        
+        self.fin = 0
+        self.vecteur2 = vecteur3
         #nuages
         self.current_clouds = []
         self.cloud_surf = import_folder('Graphique/Nuage')
@@ -227,6 +228,15 @@ class Editeur:
             self.canvas_remove()
             self.creation_nuages(event)
             
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_LCTRL:
+                self.fin = 1
+                self.vecteur2 = position_souris()
+                vecteur3 = self.vecteur2
+                print(vecteur3)
+    def envoyer_fin(self, vecteur2):
+        self.vecteur = vecteur2
+        return self.vecteur
+    
     def souris_sur_objets(self):
         for sprite in self.canvas_objets:
             if sprite.rect.collidepoint(position_souris()):
@@ -477,7 +487,13 @@ class Editeur:
         self.preview()
         self.menu.afficher(self.selection_index)
         self.display_surface.blit(self.image1, (LARGEUR_FENETRE - 172,((HAUTEUR_FENETRE/2)+130)))
-        
+        if self.fin == 1:
+            self.image1 = pygame.image.load('Graphique/Levels/data/arriver.png').convert_alpha()
+            x = self.vecteur2[0]
+            y = self.vecteur2[1]
+            arriver= pygame.Rect(x-32,y-32,64,64)
+            self.display_surface.blit(self.image1, (x-32,y-32))
+            
 class CanvasTile:
     def __init__(self, tile_id, offset = vector()):
 

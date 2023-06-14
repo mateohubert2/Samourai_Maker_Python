@@ -29,6 +29,7 @@ class Main:
         self.editeur_active = True
         self.transition = Transition(self.toggle)
         self.editeur = Editeur(self.cases_terrain, self.switch)
+        self.vecteur1 = self.editeur.vecteur2
         #importation et changement du cureur
         #convert_alpha() permet d'augmenter les performances
         surf = load('Graphique/curseur/souris.png').convert_alpha()
