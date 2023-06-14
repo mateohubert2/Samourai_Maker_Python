@@ -33,3 +33,4 @@ Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
 - Clique droit pour changer de bloc/arbre/pièce/enemies dans le menu en bas à droite de l'éditeur.
 - clique molette pour déplacer la caméra dans l'éditeur.
 - Les objets tels que le jouer ou les arbres sont deplaçable en faisant clique gauche dessus.
+- La fin du jeu est défini par le fait que toutes les pièces présentes ont étés récuperées, **il est donc impératif de poser au minimum une pièce lors de la création d'un niveau!**
