@@ -23,5 +23,5 @@ Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
  - Ajout de bruit d'ambiance (Game_over, Click dans un menu).
  - La direction artistique à été entierment revu.
  - gestion de la valeur de chaque pièce.
- - Gestion de victoire/arrivé representé par deux katanas en croix 
+ - Gestion de victoire/arrivé representé par deux katanas en croix (**il faut appuyer sur CTRL pour poser les katanas**)
  - 
