@@ -66,6 +66,7 @@ class Main:
             'hit': pygame.mixer.Sound('audio/hit.wav'),
             'jump': pygame.mixer.Sound('audio/jump.wav'),
             'music': pygame.mixer.Sound('audio/SuperHero.ogg'),
+            'Game_Over': pygame.mixer.Sound('audio/Bruitage_Game_Over.ogg')
         }
 
     def toggle(self):
@@ -120,6 +121,8 @@ class Main:
                 self.level.lancement(dt)
                 self.editeur.editor_music.stop()
                 if self.level.vie_actuelle_level == 0:
+                    self.level.bg_music.stop()
+                    self.level.Game_Over_music.play()
                     self.image1 = pygame.image.load('Graphique/game_over/game_over.png').convert_alpha()
                     self.image2 = pygame.image.load('Graphique/game_over/tryagain.png').convert_alpha()
                     self.image3 = pygame.image.load('Graphique/game_over/menu.png').convert_alpha()

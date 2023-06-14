@@ -53,6 +53,8 @@ class Level:
         self.bg_music = audio['music']
         self.bg_music.set_volume(0.4)
         self.bg_music.play(loops = -1)
+        self.Game_Over_music = audio['Game_Over']
+        self.Game_Over_music.set_volume(0.4)
         
         self.coin_sound = audio['coin']
         self.coin_sound.set_volume(0.3)
