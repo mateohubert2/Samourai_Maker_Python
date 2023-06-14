@@ -134,12 +134,15 @@ class Main:
                     while self.i == True:
                         for event in pygame.event.get():
                             if event.type == pygame.MOUSEBUTTONDOWN and self.rectover.collidepoint(position_souris()):
+                                self.level.bg_music.stop()
+                                self.editeur.editor_music.play(loops = -1)
                                 self.editeur_active = True
                                 self.i = False
                             if event.type == pygame.QUIT:
                                 pygame.quit()
                             if event.type == pygame.MOUSEBUTTONDOWN and self.rectover2.collidepoint(position_souris()):
                                 self.editeur.editor_music.stop()
+                                self.level.bg_music.stop()
                                 mainmenu = Main()
                                 mainmenu.lancement2()
                     self.i = True
