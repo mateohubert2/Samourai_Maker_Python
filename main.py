@@ -113,11 +113,13 @@ class Main:
             if self.editeur_active:
                 self.editeur.lancement(dt)
                 if self.editeur.retour_menu == True:
+                    self.editeur.editor_music.stop()
                     main_retour_menu = Main()
                     main_retour_menu.lancement2()
                     self.editeur.retour_menu = False
             else:
                 self.level.lancement(dt)
+                self.editeur.editor_music.stop()
                 if self.level.vie_actuelle_level == 0:
                     self.image1 = pygame.image.load('Graphique/game_over/game_over.png').convert_alpha()
                     self.image2 = pygame.image.load('Graphique/game_over/tryagain.png').convert_alpha()
@@ -138,6 +140,7 @@ class Main:
                             if event.type == pygame.QUIT:
                                 pygame.quit()
                             if event.type == pygame.MOUSEBUTTONDOWN and self.rectover2.collidepoint(position_souris()):
+                                self.editeur.editor_music.stop()
                                 mainmenu = Main()
                                 mainmenu.lancement2()
                     self.i = True
@@ -198,9 +201,11 @@ class Main:
             
             pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(position_souris()):
+                self.editeur.editor_music.stop()
                 main = Main()
                 main.lancement()
             if event.type == pygame.MOUSEBUTTONDOWN and self.rect1.collidepoint(position_souris()):
+                self.editeur.editor_music.stop()
                 main1 = Main()
                 main1.lancement1()
 
