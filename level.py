@@ -51,7 +51,7 @@ class Level:
         
         #musique
         self.bg_music = audio['music']
-        self.bg_music.set_volume(0.4)
+        self.bg_music.set_volume(0.25)
         self.bg_music.play(loops = -1)
         self.Game_Over_music = audio['Game_Over']
         self.Game_Over_music.set_volume(0.4)
@@ -60,7 +60,7 @@ class Level:
         self.coin_sound.set_volume(0.3)
         
         self.hit_sound = audio['hit']
-        self.hit_sound.set_volume(0.3)
+        self.hit_sound.set_volume(0.1)
     
     def build_level(self, grid, asset_dict, jump_sound):
         
