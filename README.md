@@ -19,7 +19,7 @@ Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
  ## Fonctionnalités ajoutés:
  - Un menu principal avec la possibilité du mode de jeu: Niveau ou Editeur de niveau.
  - La possibilité de retourner au menu principal depuis l'éditeur.
- - Une gestion de fin de jeu (game over) avec un nouveau menu qui permet de rejouer au menu ou  de retourner au menu principal.
+ - Une gestion de fin de jeu (game over) avec un nouveau menu qui permet de rejouer au niveau ou  de retourner au menu principal.
  - Une barre de vie et la gestion de prise de degat par les enemies avec des effets de recul à chaque degat subit.
  - Ajout de bruit d'ambiance (Game_over, Click dans un menu).
  - La direction artistique à été entierment revu.
