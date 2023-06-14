@@ -29,7 +29,6 @@ class Main:
         self.editeur_active = True
         self.transition = Transition(self.toggle)
         self.editeur = Editeur(self.cases_terrain, self.switch)
-        self.vecteur1 = self.editeur.vecteur2
         self.selection_bruit = pygame.mixer.Sound('audio/Selection.ogg')
         self.selection_bruit.set_volume(0.4)
         #importation et changement du cureur
@@ -152,7 +151,7 @@ class Main:
                                 self.level.bg_music.stop()
                                 mainmenu = Main()
                                 mainmenu.lancement2()
-                    self.i = True
+                    self.i = True       
             self.transition.display(dt)
                             
             pygame.display.update()
