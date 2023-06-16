@@ -32,6 +32,8 @@ class Main:
         self.editeur = Editeur(self.cases_terrain, self.switch)
         self.selection_bruit = pygame.mixer.Sound('audio/Selection.ogg')
         self.selection_bruit.set_volume(0.4)
+        self.musique_bg = pygame.mixer.Sound('audio/musique_bg.ogg')
+        self.musique_bg.set_volume(0.25)
         #importation et changement du cureur
         #convert_alpha() permet d'augmenter les performances
         surf = load('Graphique/curseur/souris.png').convert_alpha()
@@ -68,7 +70,7 @@ class Main:
             'coin': pygame.mixer.Sound('audio/coin.wav'),
             'hit': pygame.mixer.Sound('audio/hit.wav'),
             'jump': pygame.mixer.Sound('audio/jump.wav'),
-            'music': pygame.mixer.Sound('audio/SuperHero.ogg'),
+            'music': pygame.mixer.Sound('audio/musique_bg.ogg'),
             'Game_Over': pygame.mixer.Sound('audio/Bruitage_Game_Over.ogg'),
         }
 
@@ -195,14 +197,26 @@ class Main:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN and self.rect1.collidepoint(position_souris()):
+                    self.editeur.editor_music.stop()
+                    
+                    self.selection_bruit.play()
+                    
                     mainlvl1 = Main()
                     mainlvl1.lancement5()
                     
                 if event.type == pygame.MOUSEBUTTONDOWN and self.rect2.collidepoint(position_souris()):
+                    self.editeur.editor_music.stop()
+                    
+                    self.selection_bruit.play()
+                    
                     mainlvl1 = Main()
                     mainlvl1.lancement3()
                     
                 if event.type == pygame.MOUSEBUTTONDOWN and self.rect3.collidepoint(position_souris()):
+                    self.selection_bruit.play()
+                    self.editeur.editor_music.stop()
+                    
+                    
                     mainlvl1 = Main()
                     mainlvl1.lancement4()
         
@@ -230,6 +244,8 @@ class Main:
         lancement du mode de jeu "niveau"
         """
         niveau = Niveau(level_0, self.display_surface)
+        self.editeur.editor_music.stop()
+        self.musique_bg.play()
         while True:
         #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
@@ -238,6 +254,8 @@ class Main:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN and niveau.retour_menu.collidepoint(position_souris()):
+                    self.musique_bg.stop()
+                    self.selection_bruit.play()
                     main_retour_menu = Main()
                     main_retour_menu.lancement2()
             self.display_surface.fill('grey')
@@ -250,6 +268,8 @@ class Main:
         lancement du mode de jeu "niveau"
         """
         niveau = Niveau(level_1, self.display_surface)
+        self.editeur.editor_music.stop()
+        self.musique_bg.play()
         while True:
         #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
@@ -258,6 +278,8 @@ class Main:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN and niveau.retour_menu.collidepoint(position_souris()):
+                    self.musique_bg.stop()
+                    self.selection_bruit.play()
                     main_retour_menu = Main()
                     main_retour_menu.lancement2()
             self.display_surface.fill('grey')
@@ -269,6 +291,8 @@ class Main:
         lancement du mode de jeu "niveau"
         """
         niveau = Niveau(level_2, self.display_surface)
+        self.editeur.editor_music.stop()
+        self.musique_bg.play()
         while True:
         #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
@@ -277,8 +301,11 @@ class Main:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                 if event.type == pygame.MOUSEBUTTONDOWN and niveau.retour_menu.collidepoint(position_souris()):
+                    self.musique_bg.stop()
+                    self.selection_bruit.play()
                     main_retour_menu = Main()
                     main_retour_menu.lancement2()
+                    self.musique_bg.stop()
             self.display_surface.fill('grey')
             niveau.run()
             

@@ -70,9 +70,8 @@ class Coin(Animated):
         self.coin_type = coin_type 
         self.valeur = valeur
 class Ennemie2(Generic):
-    def __init__(self, assets, pos, group, collision_sprites, mort):
+    def __init__(self, assets, pos, group, collision_sprites):
         
-        self.mort = mort
         self.animation_frames = assets
         self.frame_index = 0
         self.orientation = 'right'
@@ -97,18 +96,6 @@ class Ennemie2(Generic):
         self.frame_index = 0 if self.frame_index >= len(current_animation) else self.frame_index
         self.image = current_animation[int(self.frame_index)]
         self.mask = pygame.mask.from_surface(self.image)
-        
-        if self.mort == 1:
-            current_animation = self.animation_frames[f'explosion']
-            self.frame_index += VITESSE_ANIMATION * dt
-            print(self.frame_index)
-            if self.frame_index >= 5:
-                print('ici')
-                self.kill()
-            else:
-                self.frame_index
-            self.image = current_animation[int(self.frame_index)]
-            self.mask = pygame.mask.from_surface(self.image)
         
     def move(self, dt):
         right_gap = self.rect.bottomright + vector(1,1)
