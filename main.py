@@ -37,7 +37,9 @@ class Main:
         self.selection_bruit = pygame.mixer.Sound('audio/Selection.ogg')
         self.selection_bruit.set_volume(0.4)
         self.musique_bg = pygame.mixer.Sound('audio/musique_bg.ogg')
-        
+        self.musique_bg.set_volume(0.25)
+        self.Victory = pygame.mixer.Sound('audio/Victory.ogg')
+        self.Victory.set_volume(0.25)
         #importation et changement du cureur
         #convert_alpha() permet d'augmenter les performances
         surf = load('Graphique/curseur/souris.png').convert_alpha()
@@ -162,7 +164,7 @@ class Main:
                     self.i = True
                 if len(self.level.coin_sprites) == 0:
                     self.level.bg_music.stop()
-                    self.level.Game_Over_music.play()
+                    self.Victory.play()
                     self.image1 = pygame.image.load('Graphique/game_over/victoire.png').convert_alpha()
                     self.image1 = pygame.transform.scale2x(self.image1)
                     self.image2 = pygame.image.load('Graphique/game_over/tryagain.png').convert_alpha()
