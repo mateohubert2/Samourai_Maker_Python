@@ -20,22 +20,24 @@ class Main:
         pygame.init()
         self.selection = 0
         self.i = True
+        
         self.display_surface = pygame.display.set_mode((LARGEUR_FENETRE, HAUTEUR_FENETRE))
         self.clock = pygame.time.Clock()
         self.imports()
         self.menu_appuye = False
         self.rect_musique1 = 428
         self.number = 50
+        self.musique_volume = 0.5
         #ath
         self.ath = ATH(self.display_surface)
         self.piece = 0
         self.editeur_active = True
         self.transition = Transition(self.toggle)
-        self.editeur = Editeur(self.cases_terrain, self.switch)
+        self.editeur = Editeur(self.cases_terrain, self.switch, self.musique_volume)
         self.selection_bruit = pygame.mixer.Sound('audio/Selection.ogg')
         self.selection_bruit.set_volume(0.4)
         self.musique_bg = pygame.mixer.Sound('audio/musique_bg.ogg')
-        self.musique_bg.set_volume(0.25)
+        
         #importation et changement du cureur
         #convert_alpha() permet d'augmenter les performances
         surf = load('Graphique/curseur/souris.png').convert_alpha()
@@ -118,6 +120,7 @@ class Main:
             dt = self.clock.tick() / 850
             if self.editeur_active:
                 self.editeur.lancement(dt)
+                
                 if self.editeur.retour_menu == True:
                     self.editeur.editor_music.stop()
                     main_retour_menu = Main()
@@ -321,7 +324,6 @@ class Main:
         #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
             dt = self.clock.tick() / 850
-            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -368,8 +370,13 @@ class Main:
                     text = police.render(("%"), 1 , (255,0,0))
                     self.display_surface.blit(text, (503,150))
                     self.rect_musique = pygame.draw.rect(self.display_surface, 'red',pygame.Rect(self.rect_musique1, 172, 10, 30))
+                    
                     pygame.display.update()
-                pygame.display.update()    
+                    self.musique_volume = round((self.number / 100), 1)
+                self.musique_bg.set_volume(self.musique_volume)
+                self.editeur.musique_volume = self.musique_volume
+                self.editeur.changer_volume(self.musique_volume)
+                pygame.display.update()
                     #self.rect_musique2 = pygame.draw.rect(self.display_surface, 'red',pygame.Rect(self.rect_musique.x, 172, 10, 30))    
                     #pygame.display.update()
                         
