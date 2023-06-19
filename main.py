@@ -24,6 +24,8 @@ class Main:
         self.clock = pygame.time.Clock()
         self.imports()
         self.menu_appuye = False
+        self.rect_musique1 = 428
+        self.number = 50
         #ath
         self.ath = ATH(self.display_surface)
         self.piece = 0
@@ -319,10 +321,62 @@ class Main:
         #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
             dt = self.clock.tick() / 850
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-            self.display_surface.fill('blue')
+                if event.type == pygame.MOUSEBUTTONDOWN and self.rect_options.collidepoint(position_souris()):
+                    self.i = 0
+                
+                while self.i == 0:
+                    self.surf_fond = pygame.Surface((720, 480))
+                    self.surf_fond.fill('white')
+                    self.surf_fond.set_alpha(3)
+                    self.image_croix = pygame.image.load('Graphique/Options/croix.png').convert_alpha()
+                    self.image_exit = pygame.image.load('Graphique/Options/exit.png').convert_alpha()
+                    self.image_musique = pygame.image.load('Graphique/Options/musique.png').convert_alpha()
+                    self.display_surface.blit(self.surf_fond, [280,120])
+                    self.display_surface.blit(self.image_exit, [300,500])
+                    self.display_surface.blit(self.image_croix, [455,-55])
+                    self.display_surface.blit(self.image_musique, [250,20])
+                    #self.rect_musique = pygame.draw.rect(self.display_surface, 'red',pygame.Rect(415, 172, 10, 30))
+                    self.vecteur_x = 0
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONDOWN and self.rect_croix.collidepoint(position_souris()):
+                            self.i = 1
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                        if event.type == pygame.MOUSEBUTTONDOWN and self.rect_exit.collidepoint(position_souris()):
+                            sys.exit()
+                        if event.type == pygame.MOUSEBUTTONDOWN and self.rect_musique_fond.collidepoint(position_souris()):
+                            self.vecteur = position_souris()
+                            self.vecteur_x = self.vecteur[0]
+                            self.rect_musique = pygame.draw.rect(self.display_surface, 'white',pygame.Rect(self.rect_musique1, 172, 10, 30))
+                            self.rect_musique1 = self.vecteur_x
+                            self.pourcentage = int((self.vecteur_x - 350) * 0.66)
+                            self.number = self.pourcentage
+                    police = pygame.font.SysFont("monospace",20)
+                    text = police.render(str(self.number), 1 , (255,0,0))
+                    if self.number < 10:
+                        self.display_surface.blit(text, (490,150))
+                    if self.number <= 99 and self.number >=10:
+                        self.display_surface.blit(text, (480,150))
+                    if self.number >= 100:
+                        text = police.render(("100"), 1 , (255,0,0))
+                        self.display_surface.blit(text, (470,150))
+                    police = pygame.font.SysFont("monospace",20)
+                    text = police.render(("%"), 1 , (255,0,0))
+                    self.display_surface.blit(text, (503,150))
+                    self.rect_musique = pygame.draw.rect(self.display_surface, 'red',pygame.Rect(self.rect_musique1, 172, 10, 30))
+                    pygame.display.update()
+                pygame.display.update()    
+                    #self.rect_musique2 = pygame.draw.rect(self.display_surface, 'red',pygame.Rect(self.rect_musique.x, 172, 10, 30))    
+                    #pygame.display.update()
+                        
+            self.rect_croix = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(925, 140, 50, 50))
+            self.rect_exit = pygame.draw.rect(self.display_surface, 'blue', pygame.Rect(300, 500, 210, 94))
+            self.rect_musique_fond = pygame.draw.rect(self.display_surface, 'blue', pygame.Rect(350, 172, 155, 30))
+            self.rect_options = pygame.draw.rect(self.display_surface, 'white', pygame.Rect(LARGEUR_FENETRE - 115, 25, 80, 80))
             self.image1 = pygame.image.load('Graphique/Levels/Menu/arbrefond.png').convert_alpha()
             self.image1 = pygame.transform.scale2x(self.image1)
             self.display_surface.blit(self.image1, (0,0))
@@ -341,6 +395,8 @@ class Main:
             self.display_surface.blit(text, (210,50))
             police1 = pygame.font.SysFont("monospace",40)
             text1 = police1.render(("HUBERT Matéo, HELLE Evan"), 1 , (255,0,0))
+            self.image_options = pygame.image.load('Graphique/Options/roue_crante.png').convert_alpha()
+            self.display_surface.blit(self.image_options, [LARGEUR_FENETRE - 175, -100])
             self.display_surface.blit(text1, (350,150))
             
             pygame.display.update()
