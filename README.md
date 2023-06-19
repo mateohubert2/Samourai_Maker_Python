@@ -25,6 +25,7 @@ Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
  - La direction artistique à été entierment revu.
  - gestion de la valeur de chaque pièce.
  - Gestion de victoire une fois que toutes les pièces ont étés récuperées. Avec un menu (le même que pour le game over mais légérement modifié)
+ - Possibilité de changer le volume en cliquant sur le rouage dans le menu principal
 
 ## Comment jouer:
 
