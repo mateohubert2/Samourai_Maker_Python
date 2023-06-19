@@ -375,9 +375,8 @@ class Main:
                     
                     pygame.display.update()
                     self.musique_volume = round((self.number / 100), 1)
-                self.musique_bg.set_volume(self.musique_volume)
-                self.editeur.musique_volume = self.musique_volume
-                self.editeur.changer_volume(self.musique_volume)
+                    self.editeur.musique_volume = self.musique_volume
+                    self.editeur.changer_volume(self.musique_volume)
                 pygame.display.update()
                     #self.rect_musique2 = pygame.draw.rect(self.display_surface, 'red',pygame.Rect(self.rect_musique.x, 172, 10, 30))    
                     #pygame.display.update()
