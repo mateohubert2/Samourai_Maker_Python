@@ -2,7 +2,9 @@ import pygame
 
 class ATH:
     def __init__(self,surface):
-
+        """_summary_
+        Constructeur de la classe.
+        """
         #position
         self.display_surface = surface
 
@@ -20,9 +22,6 @@ class ATH:
     def barre_de_vie(self, actuelle, full):
         """_summary_
         le but de cette fonction est d'afficher une barre de vie et de convertir le nombre de pixel pour avoir une vie max=100
-        Args:
-            actuelle (_type_): _description_
-            full (_type_): _description_
         """
         self.display_surface.blit(self.barre_vie,(20,10))
         vie_actuelle_ratio = actuelle / full 
@@ -33,8 +32,6 @@ class ATH:
     def nombre_piece(self, nombre):
         """_summary_
         le but de cette fonction est d'afficher le nombre de piece et une piece à coté
-        Args:
-            nombre (_type_): _description_
         """
         self.display_surface.blit(self.piece, self.piece_rect)
         nombre_piece_surface = self.police.render(str(nombre),False,'#33323d')
