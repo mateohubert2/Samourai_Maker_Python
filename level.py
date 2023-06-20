@@ -174,6 +174,8 @@ class Level:
                 x = self.level_limits['right'] + randint(100, 300)
                 y = self.horizon_y - randint(-50, 600)
                 Cloud((x,y), surf, self.all_sprites, self.level_limits['left'])
+            if self.player.pos.y > 1300:
+                self.vie_actuelle_level = 0
             
     def startup_clouds(self):
         for i in range(40):
