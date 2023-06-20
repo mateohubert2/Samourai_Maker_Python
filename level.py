@@ -9,7 +9,6 @@ from timer import Timer
 from sprites import Particule_enemy
 from niveau import *
 from editeur import *
-from editeur import *
 from support import *
 from pygame.mouse import get_pos as position_souris
 from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2, Ennemie, Cloud
@@ -52,12 +51,12 @@ class Level:
         pygame.time.set_timer(self.cloud_timer, 2000)
         self.startup_clouds()
         #musique
+        self.musique_level = volume
         self.bg_music = audio['music']
-        self.bg_music.set_volume(0.25)
+        self.bg_music.set_volume(self.musique_level)
         self.bg_music.play(loops = -1)
         self.Game_Over_music = audio['Game_Over']
         self.Game_Over_music.set_volume(0.4)
-        
         self.coin_sound = audio['coin']
         self.coin_sound.set_volume(0.3)
         
