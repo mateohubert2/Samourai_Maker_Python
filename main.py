@@ -20,7 +20,6 @@ class Main:
         pygame.init()
         self.selection = 0
         self.i = True
-        
         self.display_surface = pygame.display.set_mode((LARGEUR_FENETRE, HAUTEUR_FENETRE))
         self.clock = pygame.time.Clock()
         self.imports()
@@ -28,6 +27,7 @@ class Main:
         self.rect_musique1 = 428
         self.number = 50
         self.musique_volume = 0.5
+        self.volume_level = 0.5
         #ath
         self.ath = ATH(self.display_surface)
         self.piece = 0
@@ -387,6 +387,7 @@ class Main:
                     self.musique_volume = round((self.number / 100), 1)
                     self.editeur.musique_volume = self.musique_volume
                     self.editeur.changer_volume(self.musique_volume)
+                    
                 pygame.display.update()
                     #self.rect_musique2 = pygame.draw.rect(self.display_surface, 'red',pygame.Rect(self.rect_musique.x, 172, 10, 30))    
                     #pygame.display.update()
@@ -426,6 +427,7 @@ class Main:
             if event.type == pygame.MOUSEBUTTONDOWN and self.rect1.collidepoint(position_souris()):
                 self.selection_bruit.play()
                 self.editeur.editor_music.stop()
+                print(self.musique_volume)
                 main1 = Main()
                 main1.lancement1()
 
