@@ -36,6 +36,15 @@ class Niveau:
         self.contrainte_sprites = self.create_tile_group(contrainte_layout, 'contrainte')
         
     def create_tile_group(self, layout, type):
+        """_summary_
+        la fonction create_tile_group permet de crée des groupes en regroupants les cases du meme type
+        Args:
+            layout (_type_): liste contenant les cases de meme types
+            type (_type_): type de cases
+
+        Returns:
+            _type_: cette fonction return les differents groupes crées.
+        """
         sprite_group = pygame.sprite.Group()
         
         for row_index, row in enumerate(layout):
@@ -89,7 +98,11 @@ class Niveau:
     
     
     def player_setup(self, layout):
-       for row_index, row in enumerate(layout):
+        """_summary_
+        la fonction player_setup permet de mettre en place le joueur au bon endroit et differencier le bloc debut et le bloc fin
+        Args:
+        """
+        for row_index, row in enumerate(layout):
             for col_index, val in enumerate(row):
                 x = col_index * TAILLE_CASES
                 y = row_index * TAILLE_CASES 
@@ -102,11 +115,18 @@ class Niveau:
                     sprite = StaticTile(TAILLE_CASES,x,y,player_surface)
                     self.goal.add(sprite)
     def ennemie_collisions_reverse(self):
+        """_summary_
+        la fonction ennemie_collisions_reverse permet de faire faire demi tour au ennemies quand ils rentrent en collisions
+        avec un bloc de types contraintes
+        """
         for ennemie in self.ennemies_sprites.sprites():
             if pygame.sprite.spritecollide(ennemie, self.contrainte_sprites,False):
                 ennemie.reverse()
     
     def player_mouvement(self):
+        """_summary_
+        la fonction player_mouvement permet de faire bouger le joeur de droite a gauche
+        """
         keys =  pygame.key.get_pressed()
         if keys[pygame.K_d]:
             self.world_shift = 1
@@ -116,6 +136,9 @@ class Niveau:
             self.orientation = 'left'
         else: self.world_shift = 0
     def run(self):
+        """_summary_
+        la fonciton run tourne en boucle lorsqu'un niveau est lancé
+        """
         self.event = pygame.event.get()
         
         self.arbre_bg_sprites.update(self.world_shift1)
