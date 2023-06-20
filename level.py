@@ -16,6 +16,9 @@ from sprites import Generic, Block, Animated, Particule, Coin, Player, Ennemie2,
 
 class Level:
     def __init__(self, grid, switch, asset_dict, audio):
+        """_summary_
+        constructeur de la classe Level
+        """
         self.display_surface = pygame.display.get_surface()
         self.switch = switch
         self.ath = ATH(self.display_surface)
@@ -117,12 +120,21 @@ class Level:
                 sprite.player = self.player
 
     def update_piece(self,nombre):
+        """_summary_
+        Change la valeur de la variable piece quand on recupère une piecesur le jeu.
+        """
         self.piece += nombre      
 
     def prise_degat(self, nombre):
+        """_summary_
+        Change la valeur de la vie quand on se fait attaquer par un enemie.
+        """
         self.vie_actuelle_level += nombre 
 
     def get_coins(self) :
+        """_summary_
+        Permet de gerer les collisions avec les pièces, jouer un son de récuperation et palce une valeur sur chaque type de pièce.
+        """
         collided_coins = pygame.sprite.spritecollide(self.player, self.coin_sprites, True)    
         if collided_coins:  
             for sprite in collided_coins:
@@ -140,7 +152,7 @@ class Level:
 
     def check_enemy_collision(self):
         """_summary_
-        permet de tuer un enemie en sautant dessu + rebondir dessus + particule d'explosion
+        permet de tuer un enemie en sautant dessu + rebondir dessus
         """
         enemy_collision = pygame.sprite.spritecollide(self.player,self.damage_sprites, False)
         if enemy_collision:
@@ -155,29 +167,43 @@ class Level:
                     ennemie.kill()    
     
     def get_damage(self):
+        """_summary_
+        Gestion des collisions avec les enemies + son de dégat + appel de la fonction qui nous rend invincible.
+        """
         collision_sprites = pygame.sprite.spritecollide(self.player, self.damage_sprites, False, pygame.sprite.collide_mask)
         if collision_sprites:
             self.hit_sound.play()
             self.player.damage()
 
     def boucle_evenement(self):
+        """_summary_
+        Gestion de l'arrêt du mode "jeu" de l'éditeur en appyant sur "echap".
+        Placement aléatoire des nuages dans le fond du jeu.
+        Gestion de l'altitude min qui renvoie à un game over si elle est dépacée. 
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            #Quitter le mode jeu de l'éditeur
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 self.switch()
                 self.bg_music.stop()
+            #Placement nuages aléatoires
             if event.type == self.cloud_timer:
                 surf = choice(self.cloud_surfs)
                 surf = pygame.transform.scale2x(surf) if randint(0,5) > 3 else surf
                 x = self.level_limits['right'] + randint(100, 300)
                 y = self.horizon_y - randint(-50, 600)
                 Cloud((x,y), surf, self.all_sprites, self.level_limits['left'])
+            #Altitude minimale
             if self.player.pos.y > 1300:
                 self.vie_actuelle_level = 0
             
     def startup_clouds(self):
+        """_summary_
+        Lancement INSTANTANEE des nuages dans le fond du jeu pour ne pas que le fond soit vide au lancement.
+        """
         for i in range(40):
             surf = choice(self.cloud_surfs)
             surf = pygame.transform.scale2x(surf) if randint(0,5) > 3 else surf
@@ -187,6 +213,9 @@ class Level:
             
           
     def lancement(self, dt):
+        """_summary_
+        Permet d'appeler toutes les fonctions nécessaires au lancement d'un niveau lancé dans l'éditeur.
+        """
         #partie ou on regarde les collisions
         self.boucle_evenement()
         self.all_sprites.update(dt)
@@ -198,34 +227,42 @@ class Level:
         self.all_sprites.custom_draw(self.player)
         self.ath.barre_de_vie(self.vie_actuelle_level,self.vie_max)
         self.ath.nombre_piece(self.piece)
-        #pygame.draw.rect(self.display_surface, 'blue', self.arriver)
         
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
+        """_summary_
+        Constructeur
+        """
         super().__init__()
         self.display_surface = pygame.display.get_surface()
         self.offset = vector()
       
     def draw_horizon(self):
-            horizon_pos = self.horizon_y - self.offset.y
+        """_summary_
+        Possibilité de changer la hauteur du ciel dans l'éditeur.
+        """
+        horizon_pos = self.horizon_y - self.offset.y
            
-            if horizon_pos < HAUTEUR_FENETRE:
-                sea_rect = pygame.Rect(0, horizon_pos, LARGEUR_FENETRE, HAUTEUR_FENETRE - horizon_pos)
-                pygame.draw.rect(self.display_surface, COULEUR_MER, sea_rect)
-                horizon_rect1 = pygame.Rect(0,horizon_pos - 10,LARGEUR_FENETRE,10)
-                horizon_rect2 = pygame.Rect(0,horizon_pos - 16,LARGEUR_FENETRE,4)
-                horizon_rect3 = pygame.Rect(0,horizon_pos - 20,LARGEUR_FENETRE,2)
-                pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect1)
-                pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect2)
-                pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect3)
-                pygame.draw.line(self.display_surface, COULEUR_HORIZON, (0,horizon_pos), (LARGEUR_FENETRE,horizon_pos), 3)
+        if horizon_pos < HAUTEUR_FENETRE:
+            sea_rect = pygame.Rect(0, horizon_pos, LARGEUR_FENETRE, HAUTEUR_FENETRE - horizon_pos)
+            pygame.draw.rect(self.display_surface, COULEUR_MER, sea_rect)
+            horizon_rect1 = pygame.Rect(0,horizon_pos - 10,LARGEUR_FENETRE,10)
+            horizon_rect2 = pygame.Rect(0,horizon_pos - 16,LARGEUR_FENETRE,4)
+            horizon_rect3 = pygame.Rect(0,horizon_pos - 20,LARGEUR_FENETRE,2)
+            pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect1)
+            pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect2)
+            pygame.draw.rect(self.display_surface, COULEUR_DESSUS_HORIZON, horizon_rect3)
+            pygame.draw.line(self.display_surface, COULEUR_HORIZON, (0,horizon_pos), (LARGEUR_FENETRE,horizon_pos), 3)
             
-            if horizon_pos < 0:
-                self.display_surface.fill(COULEUR_MER)
+        if horizon_pos < 0:
+            self.display_surface.fill(COULEUR_MER)
 
             
         
     def custom_draw(self, player):
+        """_summary_
+        Dessine le monde de jeu sur un claque, on dessinera les autres choses qu'on veut afficher par dessus ce calque.
+        """
         self.offset.x = player.rect.centerx - LARGEUR_FENETRE / 2
         self.offset.y = player.rect.centery - HAUTEUR_FENETRE / 2
         
