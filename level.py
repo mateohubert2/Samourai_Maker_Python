@@ -6,7 +6,6 @@ from support import*
 from random import choice
 from random import randint
 from timer import Timer
-from sprites import Particule_enemy
 from niveau import *
 from editeur import *
 from editeur import *
