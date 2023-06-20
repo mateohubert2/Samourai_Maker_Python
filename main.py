@@ -15,7 +15,7 @@ class Main:
     #instantiation de la classe
     def __init__(self):
         """_summary_
-        instancie les variables necessaires dans la classe main
+        Instancie les variables necessaires dans la classe main.
         """ 
         pygame.init()
         self.selection = 0
@@ -48,9 +48,9 @@ class Main:
    
     def imports(self):
         """_summary_
-        importation des elements à aller chercher dans un dossier (image et sons)
-        on importera quelquefois un fichier complet pour ne pas avaoir à prendre toutes les images d'un fichier
-        on s'occupera de gerer ces fichiers plus tard
+        Importation des elements à aller chercher dans un dossier (image et sons).
+        On importera quelquefois un fichier complet pour ne pas avaoir à prendre toutes les images d'un fichier.
+        On s'occupera de gerer ces fichiers plus tard.
         """
         #terrain
         self.cases_terrain = import_folder_dict('Graphique/Terrain/Land')  
@@ -82,7 +82,7 @@ class Main:
 
     def toggle(self):
         """_summary_
-        boucle de musique de l'editeur sans fin tant qu'on est dans l'éditeur
+        Boucle de musique de l'editeur sans fin tant qu'on est dans l'éditeur.
         """
         self.editeur_active = not self.editeur_active
         if self.editeur_active:
@@ -90,7 +90,7 @@ class Main:
    
     def switch(self, grid = None):
         """_summary_
-        création d'un dictionnaire de tous les graphismes reutilisable par la suite
+        Création d'un dictionnaire de tous les graphismes reutilisable par la suite.
         Args:
             grid (_type_, optional): permet de recuperer les information d'une liste de donnée
         """
@@ -114,23 +114,27 @@ class Main:
 
     def lancement(self):
         """_summary_
-        definition des conditions de lancement de l'editeur et du jeu sur le niveau crée + menu de Game_Over
+        definition des conditions de lancement de l'editeur et du jeu sur le niveau crée + menu de Game_Over + menu de victoire
         """
         while True:
             #changer le nom de la fênetre de jeu
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
             dt = self.clock.tick() / 850
+            #lancement de l'éditeur de niveau
             if self.editeur_active:
                 self.editeur.lancement(dt)
                 
+                #bouton retour menu principal
                 if self.editeur.retour_menu == True:
                     self.editeur.editor_music.stop()
                     main_retour_menu = Main()
                     main_retour_menu.lancement2()
                     self.editeur.retour_menu = False
             else:
+                #mode jeu sur le niveau crée par l'utilisateur
                 self.level.lancement(dt)
                 self.editeur.editor_music.stop()
+                #condition de game over + menu de game over
                 if self.level.vie_actuelle_level == 0:
                     self.level.bg_music.stop()
                     self.level.Game_Over_music.play()
@@ -162,6 +166,7 @@ class Main:
                                 mainmenu = Main()
                                 mainmenu.lancement2()
                     self.i = True
+                #conditions de victoire + menu de victoire
                 if len(self.level.coin_sprites) == 0:
                     self.level.bg_music.stop()
                     self.Victory.play()
@@ -197,12 +202,16 @@ class Main:
             pygame.display.update()
             
     def lancement1(self):
+        """_summary_
+        Menu de la section "level" qui permet de selectionner 1 niveau parmi les 3 proposés.
+        """
         while True:
             pygame.display.set_caption('Samourai Maker par Matéo et Evan')
             dt = self.clock.tick() / 850
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                #Niveau1
                 if event.type == pygame.MOUSEBUTTONDOWN and self.rect1.collidepoint(position_souris()):
                     self.editeur.editor_music.stop()
                     
@@ -210,7 +219,7 @@ class Main:
                     
                     mainlvl1 = Main()
                     mainlvl1.lancement5()
-                    
+                #Niveau2
                 if event.type == pygame.MOUSEBUTTONDOWN and self.rect2.collidepoint(position_souris()):
                     self.editeur.editor_music.stop()
                     
@@ -218,7 +227,7 @@ class Main:
                     
                     mainlvl1 = Main()
                     mainlvl1.lancement3()
-                    
+                #Niveau3
                 if event.type == pygame.MOUSEBUTTONDOWN and self.rect3.collidepoint(position_souris()):
                     self.selection_bruit.play()
                     self.editeur.editor_music.stop()
@@ -248,7 +257,7 @@ class Main:
     
     def lancement5(self):
         """_summary_
-        lancement du mode de jeu "niveau"
+        lancement niveau 1 dans le mode de jeu "Level", on appel cette fonction dans la fonction précédente
         """
         niveau = Niveau(level_0, self.display_surface)
         self.editeur.editor_music.stop()
@@ -272,7 +281,7 @@ class Main:
     
     def lancement3(self):
         """_summary_
-        lancement du mode de jeu "niveau"
+        lancement niveau 2 dans le mode de jeu "Level", on appel cette fonction dans la fonction précédente
         """
         niveau = Niveau(level_1, self.display_surface)
         self.editeur.editor_music.stop()
@@ -295,7 +304,7 @@ class Main:
             
     def lancement4(self):
         """_summary_
-        lancement du mode de jeu "niveau"
+        lancement niveau 3 dans le mode de jeu "Level", on appel cette fonction dans la fonction précédente
         """
         niveau = Niveau(level_2, self.display_surface)
         self.editeur.editor_music.stop()
@@ -329,6 +338,7 @@ class Main:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                #parametrage son par l'utilisateur
                 if event.type == pygame.MOUSEBUTTONDOWN and self.rect_options.collidepoint(position_souris()):
                     self.i = 0
                 
@@ -406,7 +416,7 @@ class Main:
             self.image_options = pygame.image.load('Graphique/Options/roue_crante.png').convert_alpha()
             self.display_surface.blit(self.image_options, [LARGEUR_FENETRE - 175, -100])
             self.display_surface.blit(text1, (350,150))
-            
+            #menu de selection du mode de jeu 
             pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(position_souris()):
                 self.selection_bruit.play()
@@ -437,6 +447,9 @@ class Transition:
         self.threshold = self.rayon + 100
     #condtions de la transition en 2 temps (faire grandir le cercle jusqu'au cenrtre puis repart en arrière)
     def display(self, dt):
+        """_summary_
+        Affiche un cercle noir qui va retrecir puis s'élargir pour faire une transition
+        """
         if self.active:
             self.largeur_bordure += 1000 * dt * self.direction
             #augmente l'epaisseur du cercle jusqu'au centre
