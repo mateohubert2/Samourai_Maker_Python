@@ -21,11 +21,16 @@ Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
  - La possibilité de retourner au menu principal depuis l'éditeur.
  - Une gestion de fin de jeu (game over) avec un nouveau menu qui permet de rejouer au niveau ou  de retourner au menu principal.
  - Une barre de vie et la gestion de prise de dégat par les enemies avec des effets de recul à chaque dégat subit.
+ - Compteur de pièce
  - Ajout de bruit d'ambiance (Game_over, Victoire, Click dans un menu).
  - La direction artistique à été entierment revu.
  - gestion de la valeur de chaque pièce.
  - Gestion de victoire une fois que toutes les pièces ont étés récuperées. Avec un menu (le même que pour le game over mais légérement modifié)
  - Possibilité de changer le volume en cliquant sur le rouage dans le menu principal
+ - Particules de poussière quand le joueur marche
+ - Afficher les niveaux dans le mode "level" (on ne peut pas encore jouer dedans)
+ - Ajout de boutons "retour menu" quand on est dans les différents modes de jeu
+ - Faire un game over lorsqu'on tombe dans le vide
 
 ## Comment jouer:
 
