@@ -13,6 +13,9 @@ from level import *
 
 class Generic(pygame.sprite.Sprite):
     def __init__(self, pos, surf, group, z = LEVEL_LAYERS['main']):
+        """_summary_
+        Constructeur des entitées qui ne se déplacent pas.
+        """
         super().__init__(group)
         self.image = surf
         self.rect = self.image.get_rect(topleft = pos)
@@ -20,11 +23,17 @@ class Generic(pygame.sprite.Sprite):
         
 class Block(Generic):
     def __init__(self, pos, size, group):
+        """_summary_
+        Constructeur des blocs de l'éditeur.
+        """
         surf = pygame.Surface(size)
         super().__init__(pos, surf, group)
         
 class Cloud(Generic):
     def __init__(self, pos, surf, group, left_limit):
+        """_summary_
+        Constructeur
+        """
         super().__init__(pos, surf, group, LEVEL_LAYERS[('clouds')])
         self.left_limit = left_limit      
                 
@@ -32,6 +41,9 @@ class Cloud(Generic):
         self.speed = randint(20,30)
         
     def update(self, dt):
+        """_summary_
+        Gestion des déplacement des nuages et les supprimes lorsqu'ils quittent l'ecran.
+        """
         self.pos.x -= self.speed * dt
         self.rect.x = round(self.pos.x)
         if self.rect.x <= self.left_limit:
@@ -39,24 +51,40 @@ class Cloud(Generic):
         
 class Animated(Generic):
     def __init__(self, assets, pos, group, z = LEVEL_LAYERS['main']):
+        """_summary_
+        Constructeur des animations des entitées qui ne se déplacent pas.
+        """
         self.animation_frames = assets
         self.frame_index = 0
         super().__init__(pos, self.animation_frames[self.frame_index], group, z)
     
     def animate(self, dt):
+        """_summary_
+        Gestion de l'animation en faisant boucler des images à une certaines vitesse définie dans le fichier parametres.
+        """
         self.frame_index += (VITESSE_ANIMATION * dt) / 2
         self.frame_index = 0 if self.frame_index >= len(self.animation_frames) else self.frame_index
         self.image = self.animation_frames[int(self.frame_index)]
     
     def update(self, dt):
+        """_summary_
+        Met à jour les images qui défilent lors de l'animation.
+        """
         self.animate(dt)
             
 class Particule(Animated):
     def __init__(self, assets, pos, group):
+        """_summary_
+        Constructeur des particules quand on recupère une pièce.
+        """
         super().__init__(assets, pos, group)            
         self.rect = self.image.get_rect(center = pos)
         
     def animate(self, dt):
+        """_summary_
+        Les particules fonctionnent comme l'animation d'un objet statique, on fait défiler des images à une certaine vitesse.
+        Quand toute les images sont passées une fois, on arrête le défilement des images.
+        """
         self.frame_index += VITESSE_ANIMATION * dt
         if self.frame_index < len(self.animation_frames):
             self.image = self.animation_frames[int(self.frame_index)]
@@ -65,13 +93,18 @@ class Particule(Animated):
         
 class Coin(Animated):
     def __init__(self, coin_type, assets, pos, group,valeur):
+        """_summary_
+        Constructeur d'une pièce statique animée.
+        """
         super().__init__(assets, pos, group)
         self.rect = self.image.get_rect(center = pos)
         self.coin_type = coin_type 
         self.valeur = valeur
 class Ennemie2(Generic):
     def __init__(self, assets, pos, group, collision_sprites):
-        
+        """_summary_
+        Constructeur de l'enemie qui se déplace sur les platformes.
+        """
         self.animation_frames = assets
         self.frame_index = 0
         self.orientation = 'right'
@@ -91,6 +124,9 @@ class Ennemie2(Generic):
             self.kill()
             
     def animate(self, dt):
+        """_summary_
+        Animation de l'enemie quand il se déplace.
+        """
         current_animation = self.animation_frames[f'run_{self.orientation}']
         self.frame_index += VITESSE_ANIMATION * dt
         self.frame_index = 0 if self.frame_index >= len(current_animation) else self.frame_index
@@ -98,6 +134,9 @@ class Ennemie2(Generic):
         self.mask = pygame.mask.from_surface(self.image)
         
     def move(self, dt):
+        """_summary_
+        Gestion du déplacement sur la platfome jusqu'aux extremitées de celle-ci.
+        """
         right_gap = self.rect.bottomright + vector(1,1)
         right_block = self.rect.midright + vector(1,0)
         left_gap = self.rect.bottomleft + vector(-1,1)
@@ -120,11 +159,17 @@ class Ennemie2(Generic):
         self.rect.x = round(self.pos.x)
     
     def update(self, dt):
+        """_summary_
+        Mise à jour de l'image de l'animation.
+        """
         self.animate(dt)
         self.move(dt)
         
 class Ennemie(Generic):
     def __init__(self, orientation, assets, pos, group, pearl_surf, damage_sprites):
+        """_summary_
+        Constructeur d'un enemie statique qui tire des perles.
+        """
         self.orientation = orientation
         self.animation_frames = assets.copy()
         if orientation == 'right':
@@ -142,6 +187,9 @@ class Ennemie(Generic):
         self.damage_sprites = damage_sprites
     
     def animate(self, dt):
+        """_summary_
+        Gestion de l'animation.
+        """
         current_animation = self.animation_frames[self.status]
         self.frame_index += VITESSE_ANIMATION * dt
         if self.frame_index >= len(current_animation):
@@ -157,18 +205,28 @@ class Ennemie(Generic):
             Pearl(self.rect.center + offset, pearl_direction, self.pearl_surf, [self.groups()[0], self.damage_sprites])
             self.has_shot = True
     def get_status(self):
+        """_summary_
+        Permet de savoir si l'enemie tire une perle ou non (permet d'eviter d'en tirer plusieurs en même temps).
+        """
         if vector(self.player.rect.center).distance_to(vector(self.rect.center)) < 500 and not self.attack_cooldown.active:
             self.status = 'attack'
         else:
             self.status = 'idle'
     
     def update(self, dt):
+        """_summary_
+        Met à jour les images de l'animiation.
+        Lance un cooldown à chaque fois que l'enemie attaque pour eviter de tirer plusieurs perles en même temps.
+        """
         self.get_status()
         self.animate(dt)
         self.attack_cooldown.uptade()
         
 class Pearl(Generic):
     def __init__(self, pos, direction, surf, group):
+        """_summary_
+        Constructeur de la perle tiré par l'enemie.
+        """
         super().__init__(pos, surf, group)       
         self.mask = pygame.mask.from_surface(self.image)
         
@@ -181,6 +239,9 @@ class Pearl(Generic):
 
 
     def update(self, dt):
+        """_summary_
+        Met à jour la postion de la perle.
+        """
         self.pos.x += self.direction.x * self.speed * dt
         self.rect.x = round(self.pos.x)
         
@@ -190,7 +251,9 @@ class Pearl(Generic):
     
 class Player(Generic):
     def __init__(self, pos, assets, group, collision_sprites, jump_sound, surface,prise_degat):
-        
+        """_summary_
+        Construteur de l'entitée joueur.
+        """
         self.animation_frames = assets
         self.frame_index = 0
         #nouvellefonction
@@ -225,6 +288,9 @@ class Player(Generic):
         self.duree_damage = 0
 
     def damage(self):
+        """_summary_
+        Gestion de la prise de dégat avec une durée d'invulnérabilité et un effet de knockback.
+        """
         if not self.invul_timer.active:
             self.duree_damage = pygame.time.get_ticks()
             self.invul_timer1.activate()
@@ -234,6 +300,9 @@ class Player(Generic):
     
     
     def get_status(self):
+        """_summary_
+        Gestion du statut pour ne pas pouvoir sauter deux fois par exemple.
+        """
         if self.direction.y < 0:
             self.status = 'jump'
         elif self.direction.y > 1:
@@ -242,6 +311,10 @@ class Player(Generic):
            self.status = 'run' if self.direction.x != 0 else 'idle'
     
     def animate(self, dt):
+        """_summary_
+        Animation du joueur avec des images qui défilent.
+        Ajout d'un masque qui fait briller le joueur quand il prend des dégats.
+        """
         current_animation = self.animation_frames[f'{self.status}_{self.orientation}']
         self.frame_index += VITESSE_ANIMATION * dt / 2
         self.frame_index = 0 if self.frame_index >= len(current_animation) else self.frame_index
@@ -254,6 +327,9 @@ class Player(Generic):
            self.image = surf
         
     def input(self):
+        """_summary_
+        Gestion des déplacements du joueur selon les touches préssées.
+        """
         keys =  pygame.key.get_pressed()
         if keys[pygame.K_d]:
             self.direction.x = 1
@@ -268,6 +344,9 @@ class Player(Generic):
             self.jump_sound.play()
         
     def move(self, dt):
+        """_summary_
+        Gestion du déplacement du joueur selon la direction choisi.
+        """
         #horizontale
         self.pos.x += self.direction.x * self.speed * dt
         self.hitbox.centerx = round(self.pos.x)
@@ -281,15 +360,24 @@ class Player(Generic):
         self.collision('vertical')
     
     def apply_gravity(self, dt):
+        """_summary_
+        Gestion de la gravité qui permet de de tomber quand on saute ou quand on tombe d'une platforme.
+        """
         self.direction.y += self.gravity * dt
         self.rect.y += self.direction.y
     
     def check_on_floor(self):
+        """_summary_
+        Regarde si il y'a une hitbox sous le joueur.
+        """
         floor_rect = pygame.Rect(self.hitbox.bottomleft,(self.hitbox.width,2))
         floor_sprites = [sprite for sprite in self.collision_sprites if sprite.rect.colliderect(floor_rect)]
         self.on_floor = True if floor_sprites else False
     
     def collision(self, direction):
+        """_summary_
+        Gestion de collision avec la hitbox du joueur.
+        """
         for sprite in self.collision_sprites:
             if sprite.rect.colliderect(self.hitbox):
                 if direction == 'horizontal':
@@ -305,6 +393,10 @@ class Player(Generic):
                     self.direction.y = 0
  
     def update(self, dt):
+        """_summary_
+        Mise à jour du statut du joueur,de la gravité et des images de l'animation.
+        Regarde contament ce qu'il se passe sur la hitbox du joueur.
+        """
         self.input()
         self.apply_gravity(dt)
         self.move(dt)
