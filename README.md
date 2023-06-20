@@ -15,6 +15,8 @@ Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
  
  Celui-ci nous a permis de maitriser l'outil "pygame". Nous avons par la suite ajouter de nombreuses fonctionnalités au jeu.
  Les musiques et les bruitages sont libres de droits et n'ont pas étés composées par nous.
+## Vidéo de présentation:
+https://youtu.be/tZuYO0oBeiE
  
  ## Fonctionnalités ajoutés:
  - Un menu principal avec la possibilité du mode de jeu: Niveau ou Editeur de niveau.
