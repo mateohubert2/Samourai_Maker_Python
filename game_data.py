@@ -1,3 +1,5 @@
+#Ce fichier permet d'importer les images nécessaires dans chaque niveau du mode "level".
+    
 level_0 = {
     'terrain': 'Graphique/Levels/0/level_0_terrain.csv',
     'piece': 'Graphique/Levels/0/level_0_coins.csv',
