@@ -9,7 +9,7 @@ Ce projet a été entierement réalisé en Python dans le cadre d'un projet scol
 Pour executer ce programme, il est nécessaire d'importer la librairie Pygame.
 
 ## Inspiration:
- ce porjet à été réalisé sur la base d'un tuto:
+ ce projet à été réalisé sur la base d'un tuto:
  
  https://www.youtube.com/watch?v=qYomF9p_SYM&t=2s
  
