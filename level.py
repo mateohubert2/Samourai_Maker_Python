@@ -68,56 +68,59 @@ class Level:
         self.hit_sound.set_volume(0.1)
     
     def build_level(self, grid, asset_dict, jump_sound):
+        """_summary_
+        Importation des images qu'on peut placer dans l'éditeur
+        """
         
-            for layer_name, couche in grid.items():
-              for pos, data in couche.items():
-                    if layer_name == 'terrain':
-                        Generic(pos, asset_dict['land'][data], [self.all_sprites, self.collision_sprites])
-                    if layer_name == 'eau':
-                        if data == 'top':
-                            Animated(asset_dict['water top'], pos, self.all_sprites, LEVEL_LAYERS['water'])
-                        else:
-                            Generic(pos, asset_dict['water bottom'], self.all_sprites, LEVEL_LAYERS['water'])
+        for layer_name, couche in grid.items():
+            for pos, data in couche.items():
+                if layer_name == 'terrain':
+                    Generic(pos, asset_dict['land'][data], [self.all_sprites, self.collision_sprites])
+                if layer_name == 'eau':
+                    if data == 'top':
+                        Animated(asset_dict['water top'], pos, self.all_sprites, LEVEL_LAYERS['water'])
+                    else:
+                        Generic(pos, asset_dict['water bottom'], self.all_sprites, LEVEL_LAYERS['water'])
                     
-                    match data:
-                        case 0: self.player = Player(pos, asset_dict['player'] ,self.all_sprites, self.collision_sprites, jump_sound, self.display_surface,self.prise_degat)
-                        case 1:
-                            self.horizon_y = pos[1]
-                            self.all_sprites.horizon_y = pos[1]
+                match data:
+                    case 0: self.player = Player(pos, asset_dict['player'] ,self.all_sprites, self.collision_sprites, jump_sound, self.display_surface,self.prise_degat)
+                    case 1:
+                        self.horizon_y = pos[1]
+                        self.all_sprites.horizon_y = pos[1]
                         
-                        case 4: Coin('gold', asset_dict['gold'], pos, [self.all_sprites, self.coin_sprites],5)
-                        case 5: Coin('silver', asset_dict['silver'], pos, [self.all_sprites, self.coin_sprites],1)
-                        case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites],10)
+                    case 4: Coin('gold', asset_dict['gold'], pos, [self.all_sprites, self.coin_sprites],5)
+                    case 5: Coin('silver', asset_dict['silver'], pos, [self.all_sprites, self.coin_sprites],1)
+                    case 6: Coin('diamond', asset_dict['diamond'], pos, [self.all_sprites, self.coin_sprites],10)
                         
-                        case 7:
-                            Ennemie(orientation = 'left', 
-                                    assets = asset_dict['ennemie'], 
-                                    pos = pos, 
-                                    group = [self.all_sprites, self.collision_sprites, self.ennemie_sprites],
-                                    pearl_surf = asset_dict['pearl'],
-                                    damage_sprites = self.damage_sprites)
+                    case 7:
+                        Ennemie(orientation = 'left', 
+                                assets = asset_dict['ennemie'], 
+                                pos = pos, 
+                                group = [self.all_sprites, self.collision_sprites, self.ennemie_sprites],
+                                pearl_surf = asset_dict['pearl'],
+                                damage_sprites = self.damage_sprites)
                             
                             
-                        case 8:
-                            Ennemie2(asset_dict['ennemie2'], pos, [self.all_sprites, self.damage_sprites], self.collision_sprites)
+                    case 8:
+                        Ennemie2(asset_dict['ennemie2'], pos, [self.all_sprites, self.damage_sprites], self.collision_sprites)
                         
                         
                         
-                        case 9:
-                            Animated(asset_dict['arbre']['Animation_Arbre1fg'], pos, self.all_sprites)
-                            Block(pos + vector(25,11), (85, 45), self.collision_sprites)
-                        case 10:
-                            Animated(asset_dict['arbre']['Animation_Arbre2fg'], pos, self.all_sprites)
-                            Block(pos + vector(15,10), (95, 40), self.collision_sprites)
-                        case 11:
-                            Animated(asset_dict['arbre']['Animation_Arbre3fg'], pos, self.all_sprites)
-                            Block(pos + vector(15,25), (100, 60), self.collision_sprites)
+                    case 9:
+                        Animated(asset_dict['arbre']['Animation_Arbre1fg'], pos, self.all_sprites)
+                        Block(pos + vector(25,11), (85, 45), self.collision_sprites)
+                    case 10:
+                        Animated(asset_dict['arbre']['Animation_Arbre2fg'], pos, self.all_sprites)
+                        Block(pos + vector(15,10), (95, 40), self.collision_sprites)
+                    case 11:
+                        Animated(asset_dict['arbre']['Animation_Arbre3fg'], pos, self.all_sprites)
+                        Block(pos + vector(15,25), (100, 60), self.collision_sprites)
                         
-                        case 12: Animated(asset_dict['arbre']['Animation_Arbre1bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
-                        case 13: Animated(asset_dict['arbre']['Animation_Arbre2bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
-                        case 14: Animated(asset_dict['arbre']['Animation_Arbre3bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
-            for sprite in self.ennemie_sprites:
-                sprite.player = self.player
+                    case 12: Animated(asset_dict['arbre']['Animation_Arbre1bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+                    case 13: Animated(asset_dict['arbre']['Animation_Arbre2bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+                    case 14: Animated(asset_dict['arbre']['Animation_Arbre3bg'], pos, self.all_sprites, LEVEL_LAYERS['bg'])
+        for sprite in self.ennemie_sprites:
+            sprite.player = self.player
 
     def update_piece(self,nombre):
         """_summary_
