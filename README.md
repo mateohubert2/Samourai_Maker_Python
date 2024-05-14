@@ -37,7 +37,7 @@ https://youtu.be/tZuYO0oBeiE
 ## Comment jouer:
 
 - Déplacements avec Z Q S D.
-- Clique droit pour changer de bloc/arbre/pièce/enemies dans le menu en bas à droite de l'éditeur.
+- Clique droit pour changer de bloc/arbre/pièce/ennemies dans le menu en bas à droite de l'éditeur.
 - clique molette pour déplacer la caméra dans l'éditeur.
 - Les objets tels que le joueur ou les arbres sont deplaçable en faisant clique gauche dessus.
 - Pour lancer le niveau que vous venez de creer, il faut appuyer sur "entrez"
